@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %} Cerca Campo {% endblock %} 
+
+{% block content %} 
+
+    
+<form method="get" action="{% url 'core:listacampi' %}">
+    <div class="container py-5">
+        <div class="row row-cols-1 row-cols-md-2 g-4 py-5">
+            
+            <div class="col-md-6">
+                <select id="tipo_sport" name="tipo_sport" class="form-select">
+                    <option value="">Scegli un tipo di sport</option>
+                    {% for tipo_sport, tipo_sport_display in tipi_sport %}
+                        <option value="{{ tipo_sport }}" {% if tipo_sport == tipo_sport_query %}selected{% endif %}>{{ tipo_sport_display }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+    
+            <div class="col-md-6">
+                <div class="input-group">
+                    <label for="luogo" class="visually-hidden">Luogo:</label>
+                    <input type="text" id="luogo" name="luogo" class="form-control" placeholder="Inserisci il luogo...">
+                </div>
+            </div>
+            
+            <div class="col-md-12 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Cerca</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+{% endblock %}
+

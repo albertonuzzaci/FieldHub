@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block head %} {% endblock %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    {% if object_list.count > 0 %}
+        <h1> {{ object_list.count }} {{ view.get_model_name }} trovati. </h1>
+        <div class="row row-cols-1 row-cols-md-3 g-4 py-5">
+        {% for campo in object_list %}
+            {% include "core/card.html" with id_campo=campo.id tipo_sport=campo.get_tipo_sport_display coperto=campo.coperto costo=campo.costo servizi=campo.servizi struttura=campo.struttura %}
+        {% endfor %}
+    {% else %}
+        <p>Nessun campo trovato.</p>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

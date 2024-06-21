@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block head %} {% endblock %}
+
+{% block content %} 
+{% for checkbox in widget.choices %}
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} id="{{ widget.attrs.id }}_{{ forloop.counter0 }}" value="{{ checkbox.choice_value|stringformat:"s" }}" {% if checkbox.selected %}checked="checked"{% endif %}>
+        <label class="form-check-label" for="{{ widget.attrs.id }}_{{ forloop.counter0 }}">{{ checkbox.choice_label }}</label>
+    </div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head %} {% endblock %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+
+    <center>
+    <h1>{{title}}</h1>
+
+    {% if message == "" %}
+
+    <form action="/core/creacampo">
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome" ><br>
+        <label for="costo">Costo:</label><br>
+        <input type="text" id="costo" name="costo"><br><br>
+        <input type="submit" value="Crea Entry">
+      </form> 
+
+      {% else %}
+
+      <p> {{message}} </p>
+      <a href="{% url 'core:listacampi' %}">Lista Campi</a>
+
+      {% endif %}
+
+    </center>
+
+{% endblock %}

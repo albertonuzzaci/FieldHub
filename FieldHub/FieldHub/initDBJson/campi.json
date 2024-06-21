@@ -1,0 +1,38 @@
+[
+    {
+        "tipo_sport": "tennis",
+        "coperto": true,
+        "costo": 25.00,
+        "servizi": "Spogliatoi, Docce, Illuminazione notturna"
+    },
+    {
+        "tipo_sport": "calcio5",
+        "coperto": false,
+        "costo": 40.00,
+        "servizi": "Spogliatoi, Docce, Parcheggio gratuito"
+    },
+    {
+        "tipo_sport": "padel",
+        "coperto": true,
+        "costo": 30.00,
+        "servizi": "Spogliatoi, Docce, Noleggio racchette"
+    },
+    {
+        "tipo_sport": "beachvolley",
+        "coperto": false,
+        "costo": 35.00,
+        "servizi": "Spogliatoi, Docce, Bar"
+    },
+    {
+        "tipo_sport": "pallavolo",
+        "coperto": true,
+        "costo": 20.00,
+        "servizi": "Spogliatoi, Docce, Parcheggio gratuito, Tribuna"
+    },
+    {
+        "tipo_sport": "calcio7",
+        "coperto": false,
+        "costo": 50.00,
+        "servizi": "Spogliatoi, Docce, Parcheggio gratuito, Bar"
+    }
+]

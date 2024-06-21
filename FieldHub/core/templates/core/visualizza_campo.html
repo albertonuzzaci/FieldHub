@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %} {{object.costo}} {% endblock %}
+
+{% block content %}
+
+    <center>
+    <h1>Costo {{object.costo}} €</h1>
+
+    {% if object.servizi.count == 0 %}
+        <p> Non ci sono servizi </p>
+    {% else %}
+        <p> Questo campo di {{object.get_tipo_sport_display}} offre i seguenti servizi: </p>
+        {% for s in object.servizi.all %}
+            <li> {{s.nome}} </li>
+        {% endfor %}
+    
+    {% endif %}
+
+    <p> Dettagli struttura <p>
+    {{object.struttura.nome_struttura}}
+
+
+    </center>
+
+{% endblock %}
