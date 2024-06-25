@@ -1,4 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 
-def cercacampi(request):
-    return render(request, 'core/cercacampo')
+def home_page(request):
+
+    user = request.user
+    if user.is_authenticated:
+        if user.is_propStruttura:
+            return redirect('core:gestisci_campi')
+    return redirect('core:cerca_campo')
+

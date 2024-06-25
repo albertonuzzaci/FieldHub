@@ -30,7 +30,8 @@ class Servizio(models.Model):
         ('illuminazione','Illuminazione notturna'),
         ('bar','Bar'),
         ('parcheggio','Parcheggio gratuito'),
-        ('noleggiorachette','Noleggio racchette')
+        ('noleggiorachette','Noleggio racchette'),
+        ('casacche','Casacche in prestito')
     ]
 
     nome = models.CharField(max_length=50, choices=SERVIZIO_CHOICES, unique=True)
@@ -49,7 +50,7 @@ class Campo(models.Model):
     ]
     
     tipo_sport = models.CharField(max_length=50, choices=TIPO_SPORT_CHOICES)
-    coperto = models.BooleanField()
+    coperto = models.BooleanField(default=False)
     costo = models.DecimalField(max_digits=10, decimal_places=2)
     servizi = models.ManyToManyField(Servizio)
     struttura = models.ForeignKey(Struttura, on_delete=models.CASCADE)
@@ -61,3 +62,16 @@ class Campo(models.Model):
     
     class Meta:
         verbose_name_plural = "campi"
+
+class Prenotazione(models.Model):
+    utente = models.ForeignKey('users.Utente', on_delete=models.CASCADE)
+    campo = models.ForeignKey(Campo, on_delete=models.CASCADE)
+    data = models.DateField()
+    ora = models.TimeField()
+
+    def __str__(self):
+        return f'{self.utente.username} - {self.campo} - {self.data} {self.ora}'
+    
+    class Meta:
+        verbose_name_plural = "prenotazioni"
+        unique_together = ('campo', 'data', 'ora') 

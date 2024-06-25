@@ -1,15 +1,79 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
-{% block title %} Crea Campo {% endblock %} 
+{% block title %} Registrazione Utente {% endblock %} 
 
 {% block content %} 
 
-<h1> Crea Campo </h1>
 
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save">
-</form>
-
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+                {% csrf_token %}
+                <section>
+                    <div class="container">
+                        <div class="row">
+                            <div class="mx-auto ">
+                                <div class="card">
+                                    <div class="card-header text-black text-center">
+                                        <h2>Creazione Campo</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="row py-1">
+                                                <div class="col">
+                                                    {{ form.tipo_sport.label }}
+                                                </div>
+                                                
+                                                <div class="col">
+                                                    {{ form.tipo_sport }}
+                                                </div>
+                                            </div>
+                                            <div class="row py-1">
+                                                <div class="col">
+                                                    Copertura
+                                                </div>
+                                                <div class="col">
+                                                    {{ form.coperto }}
+                                                </div>
+                                            </div>
+                                            <div class="row py-1">
+                                                <div class="col ">
+                                                    {{ form.costo.label }}
+                                                </div>
+                                                <div class="col">
+                                                    {{ form.costo }}
+                                                </div>
+                                                {% for error in form.costo.errors %}
+                                                <span style="color: red;">{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                            <h5 style="color: black"> Servizi </h5>
+                                                {% for service in form.servizi %}
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                {{ service.choice_label|capfirst  }}
+                                                            </div>
+                                                            <div class="col">
+                                                                {{ service.tag }}
+                                                            </div>
+                                                        </div>
+                                                {% endfor %}
+                                            <form action="{% url 'core:crea_campo' %}" method="POST" novalidate>
+                                                <div class="row pt-3 justify-content-center">
+                                                    <input type="submit" value="Conferma" class="btn btn-block btn-primary" style="font-weight : bold">
+                                                </div >                                        
+                                            </div>
+                                            </form>
+                                    </div >                                        
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                </section>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

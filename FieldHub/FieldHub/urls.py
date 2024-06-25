@@ -21,15 +21,14 @@ password
 from django.contrib import admin
 from django.urls import path, include, re_path
 from .setupDB import *
-from django.shortcuts import redirect
 from .views import *
-from core.views import CercaCampoListView
-
+#
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('core/', include('core.urls')),
-    re_path(r'^$|^/$|^home/$', CercaCampoListView.as_view() , name='homepage')
+    path('users/', include('users.urls')),
+    re_path(r'^$|^/$|^home/$', home_page, name='homepage')
 ]
 
-erase_db()
-init_db()
+#erase_db()
+#init_db()

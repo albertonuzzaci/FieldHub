@@ -1,3 +1,4 @@
+
 *{
     padding: 0;
     margin: 0;
@@ -21,11 +22,59 @@ body{
 .btn-primary{
     border-radius: 50px;
     width: 120px;
+    border: none;
 }
 .btn-primary:hover{
-    background-color: black;
+    background-color:  #142d4c; 
     border: none;
 }
 h3,h5{
     color: rgb(0, 91, 228);
+}
+
+
+.text-first-color{
+    color: #ececec;
+}
+
+.first-color { 
+	background: #ececec; 
+}
+	
+.second-color { 
+	background: #9fd3c7;
+    color: black;
+}
+
+.third-color { 
+	background: #385170; 
+}
+
+.fourth-color { 
+	background: #142d4c; 
+}
+
+.text-fourth-color{
+    color:  #142d4c; 
+}
+
+#font-prenota{
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+    word-spacing: 2px;
+    font-weight: 700;
+    text-decoration: none;
+    font-style: italic;
+    font-variant: small-caps;
+    text-transform: none;
+}
+
+#info{
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-size: 15px;
+    word-spacing: 2px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: none;
 }

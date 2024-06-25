@@ -2,43 +2,130 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="./css/style.css" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <style>
-        .text-white {
-          color: #fff !important;  
-        }
-    </style>
-
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    
     {% block head %} {% endblock %}
 
     <title> {% block title %}{% endblock %}</title>
+    <style>
+        .btn-primary {
+            color: #fff;
+            background-color: #456a97;            
+            border-color: #fff; 
+        }
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+            color: #fff;
+            background-color: #1b7df4;
+            border-color: #fff; 
+        }
+    </style>
 </head>
 
-
-<body data-bs-theme="dark">
-    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start mx-auto" style="background-color:#000000; padding:10px 30px;">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-            <img src="/path/to/your/image.jpg" alt="Bootstrap" class="me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-        </a>
-        
-
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{% url 'homepage' %}" class="nav-link px-2 text-white">Home</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Crea Campo</a></li>
-        </ul>
-
-
-        <div class="text-end">
-        <button type="button" class="btn btn-outline-light me-2">Login</button>
-        <button type="button" class="btn btn-warning">Sign-up</button>
+<!-- modal che si apre quando un login va a buon fine -->
+{% if user.is_authenticated %}
+  {% if "ok" in request.GET.login %}
+  <div id="info" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Welcome {{user.username}} </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <p> La procedura di login è andata a buon fine </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal">Chiudi</button>
+        </div>
+      </div>
     </div>
-    {% block content %}
+  </div> 
+  <script>
+    $(document).ready(function(){
+        $("#info").modal('show');
+    });
+  </script>
+  {% endif %}
+{% endif %}
 
+<!-- modal che si apre ad un logout -->
+{% if "ok" in request.GET.logout %}
+  <div id="info" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Arrivederci {{user.username}} </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p> La procedura di logout è andata a buon fine </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal">Chiudi</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+  <script>
+    $(document).ready(function(){
+        $("#info").modal('show');
+    });
+  </script>
+{% endif %}
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fourth-color navbar-dark">
+    <div class="container-fluid ">
+      <a class="navbar-brand" href="{% url 'homepage' %}">Home</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="#">Profilo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'core:prenotazioni_utente' %}">Prenotazioni</a>
+            </li>
+            {% if user.is_propStruttura %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'core:crea_campo' %}">Crea Campo</a>
+            </li>
+            {% endif %}
+          {% endif%}
+        </ul>
+        <form class="d-flex">
+          {% if user.is_authenticated %}
+            <button class="btn btn-primary me-3 first-color"onclick="window.location.href='{% url 'users:logout' %}'" type="button">Logout</button>
+          {% else %}
+            <button class="btn btn-primary me-3 first-color" onclick="window.location.href='{% url 'users:login' %}'" type="button">Login</button>
+            <button class="btn btn-primary" onclick="window.location.href='{% url 'users:register' %}'" type="button">Sign-up</button>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+</nav>
+
+
+<body class="first-color">
+    {% block content %}
+    
     {% endblock %}
 </body>
+    
 </html>

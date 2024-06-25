@@ -1,16 +1,16 @@
 
 <div class="col">
-    <div class="card">
-        <img src="../../../static/img/no_image.jpg" class="card-img-top" alt="...">
+    <div class="card second-color">
+        <img src="../../../static/img/no_image.jpg" class="card-img-top " alt="...">
         <div class="card-body">
-            <h5 class="card-title">{{struttura.nome_struttura}} - {{ struttura.citta }}</h5>
-            <p> {{tipo_sport}} <p>
+            <h4 class="card-title text-fourth-color">{{struttura.nome_struttura}} - {{ struttura.citta }}</h4>
+            <h6> {{tipo_sport}} </h6>
         </div>
         <div class="mb-5 d-flex justify-content-around">
-            <h3>{{costo}}€</h3>
-            <form action="{% url 'core:prenota_campo' id_campo %}" method="post">
+            <h3 class="text-fourth-color">{{costo}}€</h3>
+            <form action="{% url 'core:visualizza_campo' id_campo %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Prenota</button>
+                <button type="submit" id="font-prenota" class="btn btn-primary third-color">PRENOTA</button>
             </form>
         </div>
     </div>

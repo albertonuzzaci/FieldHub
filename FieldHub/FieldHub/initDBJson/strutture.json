@@ -1,38 +1,70 @@
 [
     {
-        "nome_struttura": "Centro Sportivo XYZ",
-        "indirizzo": "Via Roma",
-        "num_civico": 10,
-        "descrizione": "Centro sportivo con campi da tennis e calcio.",
-        "email": "info@centrosportivoxyz.com",
-        "numTelefono": "+391234567890",
-        "citta": "Roma"
+        "utente": {
+            "username": "Federico09",
+            "nome": "Federico",
+            "cognome": "Rossi",
+            "password": "P@ssw0rd123"
+        },
+        "struttura": {
+            "nome_struttura": "Centro Sportivo XYZ",
+            "indirizzo": "Via Roma",
+            "num_civico": 10,
+            "descrizione": "Centro sportivo con campi da tennis e calcio.",
+            "email": "info@centrosportivoxyz.com",
+            "numTelefono": "+391234567890",
+            "citta": "Roma"
+        }
     },
     {
-        "nome_struttura": "Polisportiva",
-        "indirizzo": "Via Milano",
-        "num_civico": 25,
-        "descrizione": "Polisportiva dotata di ogni tipo di campo.",
-        "email": "info@poli.it",
-        "numTelefono": "1234567890",
-        "citta": "Milano"
+        "utente": {
+            "username": "Mario10",
+            "nome": "Mario",
+            "cognome": "Bianchi",
+            "password": "Secur3P@ss"
+        },
+        "struttura": {
+            "nome_struttura": "Polisportiva",
+            "indirizzo": "Via Milano",
+            "num_civico": 25,
+            "descrizione": "Polisportiva dotata di ogni tipo di campo.",
+            "email": "info@poli.it",
+            "numTelefono": "1234567890",
+            "citta": "Milano"
+        }
     },
     {
-        "nome_struttura": "Palestra Fitness Plus",
-        "indirizzo": "Corso Italia",
-        "num_civico": 15,
-        "descrizione": "Palestra con attrezzature moderne per il fitness e corsi di gruppo.",
-        "email": "info@fitnessplus.com",
-        "numTelefono": "+391112223334",
-        "citta": "Napoli"
+        "utente": {
+            "username": "Luca11",
+            "nome": "Luca",
+            "cognome": "Verdi",
+            "password": "P@ssword456"
+        },
+        "struttura": {
+            "nome_struttura": "Palestra Fitness Plus",
+            "indirizzo": "Corso Italia",
+            "num_civico": 15,
+            "descrizione": "Palestra con attrezzature moderne per il fitness e corsi di gruppo.",
+            "email": "info@fitnessplus.com",
+            "numTelefono": "+391112223334",
+            "citta": "Napoli"
+        }
     },
     {
-        "nome_struttura": "Fit club",
-        "indirizzo": "Via Torino",
-        "num_civico": 5,
-        "descrizione": "Club con campi da padel, calcetto e tanto altro.",
-        "email": "info@fitclub.it",
-        "numTelefono": "+390987654321",
-        "citta": "Milano"
+        "utente": {
+            "username": "Giorgio12",
+            "nome": "Giorgio",
+            "cognome": "Neri",
+            "password": "MyP@ssw0rd"
+        },
+        "struttura": {
+            "nome_struttura": "Fit club",
+            "indirizzo": "Via Torino",
+            "num_civico": 5,
+            "descrizione": "Club con campi da padel, calcetto e tanto altro.",
+            "email": "info@fitclub.it",
+            "numTelefono": "+390987654321",
+            "citta": "Milano"
+        }
     }
 ]

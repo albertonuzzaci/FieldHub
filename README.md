@@ -10,3 +10,8 @@ pipenv install django
 ```
 pipenv shell
 ```
+
+# Users
+Proprietari: 
+fede
+fieldhubpasswordprop
