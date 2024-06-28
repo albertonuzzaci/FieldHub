@@ -41,9 +41,8 @@ h3,h5{
 	background: #ececec; 
 }
 	
-.second-color { 
-	background: #9fd3c7;
-    color: black;
+.my-class-dio{
+    background: #c1c0c0;
 }
 
 .third-color { 

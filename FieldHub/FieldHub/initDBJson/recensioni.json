@@ -1,0 +1,82 @@
+[
+    {
+        "Voto": 5,
+        "Testo": "Campo perfetto, ben curato e con ottimi servizi. Assolutamente consigliato!"
+    },
+    {
+        "Voto": 5,
+        "Testo": "Struttura eccellente e personale molto disponibile. Esperienza fantastica!"
+    },
+    {
+        "Voto": 5,
+        "Testo": "Il miglior campo in cui ho giocato, tutto è impeccabile."
+    },
+    {
+        "Voto": 5,
+        "Testo": "Qualità del campo eccezionale, tornerò sicuramente."
+    },
+    {
+        "Voto": 4,
+        "Testo": "Buon campo, ma potrebbe migliorare la qualità dell'erba. Ottima esperienza nel complesso."
+    },
+    {
+        "Voto": 4,
+        "Testo": "Campo molto buono, servizi adeguati. Piccole migliorie lo renderebbero perfetto."
+    },
+    {
+        "Voto": 4,
+        "Testo": "Struttura ben organizzata, ma l'illuminazione potrebbe essere migliore."
+    },
+    {
+        "Voto": 4,
+        "Testo": "Ottimo campo, personale gentile. L'unico neo è il parcheggio limitato."
+    },
+    {
+        "Voto": 3,
+        "Testo": "Campo discreto, ma il terreno non è dei migliori e potrebbe essere meglio mantenuto."
+    },
+    {
+        "Voto": 3,
+        "Testo": "Esperienza nella media, il campo potrebbe essere migliorato."
+    },
+    {
+        "Voto": 3,
+        "Testo": "Campo ok, ma alcuni servizi non erano all'altezza delle aspettative."
+    },
+    {
+        "Voto": 3,
+        "Testo": "Terreno non uniforme, ma nel complesso una buona partita."
+    },
+    {
+        "Voto": 2,
+        "Testo": "Campo piuttosto mediocre, servizi insufficienti e manutenzione scarsa."
+    },
+    {
+        "Voto": 2,
+        "Testo": "Non molto soddisfatto, il campo necessita di miglioramenti significativi."
+    },
+    {
+        "Voto": 2,
+        "Testo": "Qualità del campo scadente, esperienza non molto positiva."
+    },
+    {
+        "Voto": 2,
+        "Testo": "Campo sotto la media, potrebbe essere molto meglio con un po' di manutenzione."
+    },
+    {
+        "Voto": 1,
+        "Testo": "Pessima esperienza, campo in pessime condizioni e servizi inesistenti. Non lo consiglio."
+    },
+    {
+        "Voto": 1,
+        "Testo": "Terreno in condizioni deplorevoli, davvero una delusione."
+    },
+    {
+        "Voto": 1,
+        "Testo": "Campo terribile, non vale assolutamente il prezzo pagato."
+    },
+    {
+        "Voto": 1,
+        "Testo": "Struttura in condizioni pessime, personale scortese. Mai più."
+    }
+]

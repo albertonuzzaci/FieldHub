@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Edit profile page{% endblock title %}
+
+{% block content %}
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <section>
+                <div class="card">
+                    <div class="card-header text-black text-center">
+                        <h2>Profilo di {{ request.user.username }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group row m-1">
+                                <label for="id_nome" class="col-md-4 col-form-label text-md-right"><strong>Nome</strong></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="id_nome" name="nome" value="{{ initial_data.init_nome }}" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row m-1">
+                                <label for="id_cognome" class="col-md-4 col-form-label text-md-right"><strong>Cognome</strong></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="id_cognome" name="cognome" value="{{ initial_data.init_cognome }}" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row m-1">
+                                <label for="id_email" class="col-md-4 col-form-label text-md-right"><strong>Email</strong></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="id_email" name="email" value="{{ initial_data.init_email }}" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row m-1">
+                                <label for="id_numTelefono" class="col-md-4 col-form-label text-md-right"><strong>Numero di telefono</strong></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="id_numTelefono" name="numTelefono" value="{{ initial_data.init_numTelefono }}" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            <h3 style="text-align:center; color:black">Dati della struttura
+                            </h3>
+                            
+                            <div class="form-group row m-1">
+                                <label for="id_nome_struttura" class="col-md-4 col-form-label text-md-right"><strong>Nome Struttura</strong></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="id_nome_struttura" name="nome_struttura" value="{{ initial_data.init_nome_struttura }}" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row m-1">
+                                <label for="id_citta" class="col-md-4 col-form-label text-md-right"><strong>Città</strong></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="id_citta" name="citta" value="{{ initial_data.init_citta }}" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row m-1">
+                                <label for="id_indirizzo" class="col-md-4 col-form-label text-md-right"><strong>Indirizzo</strong></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="id_indirizzo" name="indirizzo" value="{{ initial_data.init_indirizzo }}" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row m-1">
+                                <label for="id_num_civico" class="col-md-4 col-form-label text-md-right"><strong>Numero Civico</strong></label>
+                                <div class="col-md-6">
+                                    <input type="number" id="id_num_civico" name="num_civico" value="{{ initial_data.init_num_civico }}" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row m-1">
+                                <label for="id_descrizione" class="col-md-4 col-form-label text-md-right"><strong>Descrizione</strong></label>
+                                <div class="col-md-6">
+                                    <textarea id="id_descrizione" name="descrizione" class="form-control" rows="4" required>{{ initial_data.init_descrizione }}</textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row mb-0 m-1">
+                                <div class="row pt-3 justify-content-center">
+                                    <button type="reset" class="btn btn-block btn-primary m-2" style="font-weight:bold">Reset</button>
+                                    <button type="submit" class="btn btn-block btn-primary m-2" style="font-weight:bold">Conferma</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('form');
+
+        // Event listener per il click sul pulsante "Reset"
+        form.querySelector('[type="reset"]').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            // Resetta i valori dei campi del form ai valori iniziali
+            document.getElementById('id_nome').value = "{{ initial_data.init_nome }}";
+            document.getElementById('id_cognome').value = "{{ initial_data.init_cognome }}";
+            document.getElementById('id_email').value = "{{ initial_data.init_email }}";
+            document.getElementById('id_numTelefono').value = "{{ initial_data.init_numTelefono }}";
+            document.getElementById('id_nome_struttura').value = "{{ initial_data.init_nome_struttura }}";
+            document.getElementById('id_citta').value = "{{ initial_data.init_citta }}";
+            document.getElementById('id_indirizzo').value = "{{ initial_data.init_indirizzo }}";
+            document.getElementById('id_num_civico').value = "{{ initial_data.init_num_civico }}";
+            document.getElementById('id_descrizione').value = "{{ initial_data.init_descrizione }}";
+        });
+    });
+</script>
+
+{% endblock content %}

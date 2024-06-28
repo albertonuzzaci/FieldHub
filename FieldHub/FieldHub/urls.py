@@ -22,7 +22,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from .setupDB import *
 from .views import *
-#
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('core/', include('core.urls')),
@@ -30,5 +30,6 @@ urlpatterns = [
     re_path(r'^$|^/$|^home/$', home_page, name='homepage')
 ]
 
+#
 #erase_db()
 #init_db()

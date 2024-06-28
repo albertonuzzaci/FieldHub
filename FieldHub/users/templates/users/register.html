@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %} Registrazione Utente {% endblock %} 
+
+{% block content %} 
+
+<style>
+    .btn-primary {
+        color: #fff;
+        background-color: #456a97;            
+        border-color: #fff; 
+    }
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+        color: #fff;
+        background-color: #1b7df4;
+        border-color: #fff; 
+    }
+</style>
+
+<section class="mx-auto py-5 text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto text-center">
+                <div class="card">
+                    <div class="card-header text-black">
+                        <h2>Registrazione</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row py-2">
+                            <a class="w-100 btn btn-lg btn-primary" href="{% url 'users:utente_registration' %}">Sono un utente</a>
+                        </div>
+                        <div class="row py-2">
+                            <a class="w-100 btn btn-lg btn-primary" href="{% url 'users:propstruttura_registration' %}">Sono un proprietario di una struttura</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+{% endblock %}

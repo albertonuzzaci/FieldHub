@@ -1,0 +1,43 @@
+
+[
+    {
+        "username": "Alberto",
+        "nome": "Alberto",
+        "cognome": "Nuzzaci",
+        "password": "P@ssw0rd1!",
+        "email": "alberto.nuzzaci@gmail.com",
+        "telefono": "1234567890"
+    },
+    {
+        "username": "Chiara",
+        "nome": "Chiara",
+        "cognome": "Rossi",
+        "password": "P@ssw0rd1!",
+        "email": "chiara.rossi@example.com",
+        "telefono": "2345678901"
+    },
+    {
+        "username": "Marco",
+        "nome": "Marco",
+        "cognome": "Bianchi",
+        "password": "P@ssw0rd1!",
+        "email": "marco.bianchi@example.com",
+        "telefono": "3456789012"
+    },
+    {
+        "username": "Giulia",
+        "nome": "Giulia",
+        "cognome": "Verdi",
+        "password": "P@ssw0rd1!",
+        "email": "giulia.verdi@example.com",
+        "telefono": "4567890123"
+    },
+    {
+        "username": "Luca",
+        "nome": "Luca",
+        "cognome": "Russo",
+        "password": "P@ssw0rd1!",
+        "email": "luca.russo@example.com",
+        "telefono": "5678901234"
+    }
+]

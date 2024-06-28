@@ -96,12 +96,6 @@
         "servizi": "Spogliatoi, Docce, Parcheggio gratuito, Bar, Casacche in prestito"
     },
     {
-        "tipo_sport": "piscina",
-        "coperto": true,
-        "costo": 60.00,
-        "servizi": "Spogliatoi, Docce, Parcheggio gratuito, Armadietti, Piscina"
-    },
-    {
         "tipo_sport": "calcio5",
         "coperto": true,
         "costo": 45.00,

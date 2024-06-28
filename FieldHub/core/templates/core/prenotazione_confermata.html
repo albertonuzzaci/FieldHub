@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Prenotazione Confermata{% endblock %}
+{% block content %}
+<center>
+        <div class="container">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        <section>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="mx-auto ">
+                                        <div class="card">
+                                            <div class="card-header text-black text-center">
+                                                <h3 style="color:black">Prenotazione confermata presso la struttura</h3>
+                                               
+                                                <a  href="{% url 'core:visualizza_struttura' campo.struttura.id %}">  <h1> {{ campo.struttura.nome_struttura }} </h1> </a>
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="pb-3" style="color:black">Recap prenotazione</h5>
+                                                <p>Tipo sport: <b>{{ campo.get_tipo_sport_display }}</b></p>
+                                                <p> <b>
+                                                    {% if object.coperto %} 
+                                                        {{ "Coperto" }} 
+                                                    {% else %} 
+                                                        {{ "Scoperto" }} 
+                                                    {% endif %} 
+                                                </p></b>    
+                                                <p>Costo: <b>{{ campo.costo }} €</b></p>
+                                                <p>Data <b>{{ data }} - Ora: {{ ora }}</b> </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</center>
+{% endblock %}

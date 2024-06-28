@@ -19,8 +19,19 @@
                                         <h2>Creazione Campo</h2>
                                     </div>
                                     <div class="card-body">
-                                        <form method="post">
+                                        <form method="post" enctype="multipart/form-data">
                                             {% csrf_token %}
+                                            <div class="row py-1">
+                                                
+                                                <div class="col">
+                                                    {{ form.img.label }}
+                                                </div>
+                                                
+                                                <div class="col">
+                                                    {{ form.img }}
+                                                </div>
+                                                
+                                            </div>
                                             <div class="row py-1">
                                                 <div class="col">
                                                     {{ form.tipo_sport.label }}

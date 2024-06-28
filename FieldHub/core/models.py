@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Struttura(models.Model):
     nome_struttura = models.CharField(max_length=255)
@@ -8,12 +9,14 @@ class Struttura(models.Model):
     num_civico =models.IntegerField()
     descrizione = models.TextField()
     email = models.CharField(max_length=150)
-    numTelefono = models.CharField(max_length=20, validators=[
-        RegexValidator(
-            regex =  r'^(?:\+39)?\d{11}$',            
-            message="Il numero di telefono deve essere nel formato corretto."
-        )
-    ])
+    numTelefono = models.CharField(max_length=20#, 
+        #validators=[
+        #RegexValidator(
+        #    regex =  r'^(?:\+39)?\d{11}$',            
+        #    message="Il numero di telefono deve essere nel formato corretto."
+        #)
+    #]
+    )
    
     def __str__(self):
         return self.nome_struttura
@@ -49,6 +52,7 @@ class Campo(models.Model):
         ('pallavolo', 'Pallavolo')
     ]
     
+    img = models.ImageField(upload_to='static/img/users_img/field_pic', default='img/default_img/no_image.jpg')
     tipo_sport = models.CharField(max_length=50, choices=TIPO_SPORT_CHOICES)
     coperto = models.BooleanField(default=False)
     costo = models.DecimalField(max_digits=10, decimal_places=2)
@@ -68,10 +72,45 @@ class Prenotazione(models.Model):
     campo = models.ForeignKey(Campo, on_delete=models.CASCADE)
     data = models.DateField()
     ora = models.TimeField()
+    struttura = models.ForeignKey(Struttura, on_delete=models.CASCADE)
 
+    
     def __str__(self):
-        return f'{self.utente.username} - {self.campo} - {self.data} {self.ora}'
+        return f'{self.utente} - {self.campo} - {self.data} {self.ora}'
     
     class Meta:
         verbose_name_plural = "prenotazioni"
         unique_together = ('campo', 'data', 'ora') 
+        
+    def save(self, *args, **kwargs):
+        if not self.utente.user.is_utente:
+            raise ValueError("L'utente deve essere verificato come utente per scrivere una recensione.")
+        super().save(*args, **kwargs)
+        
+        
+class Recensione(models.Model):
+    data_recensione = models.DateField()
+    utente = models.ForeignKey('users.Utente', on_delete=models.CASCADE, related_name='recensioni')
+    campo = models.ForeignKey('Campo', on_delete=models.CASCADE, related_name='recensioni')
+    struttura = models.ForeignKey('Struttura', on_delete=models.CASCADE, related_name='recensioni')
+    testo = models.TextField()
+    voto = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    data_prenotazione = models.DateField()
+    prenotazione = models.ForeignKey('Prenotazione', on_delete=models.CASCADE, related_name='recensioni')
+
+
+    class Meta:
+        unique_together = ('utente', 'campo')
+
+    def save(self, *args, **kwargs):
+        if not self.utente.user.is_utente:
+            raise ValueError("L'utente deve essere verificato come utente per scrivere una recensione.")
+        if self.data_recensione < self.data_prenotazione:
+            raise ValueError("La data della recensione deve essere maggiore o uguale alla data della prenotazione.")
+        if self.prenotazione.utente != self.utente:
+            raise ValueError("Non puoi recensire per altre prenotazioni")
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Recensione di {self.campo} - Voto: {self.voto}"

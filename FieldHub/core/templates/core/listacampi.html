@@ -3,18 +3,106 @@
 {% block head %} {% endblock %}
 
 {% block title %} {{ title }} {% endblock %}
-
 {% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+
+    .card-img-top {
+        margin-bottom: 0; /* Rimuove lo spazio sotto l'immagine */
+        border-radius: 0; /* Rimuove l'arrotondamento dei bordi se presente */
+    }
+
+    .card-img-top img {
+        width: 100%;
+        height: 300px;
+        border: none;
+        border-radius: 35px; /* Assicura che l'immagine non abbia bordi arrotondati */
+    }
+    #font-campi-trovati{
+        font-family: Georgia, serif;
+        font-size: 39px;
+        letter-spacing: 0.2px;
+        word-spacing: 4px;
+        font-weight: 700;
+        text-decoration: none;
+        font-style: normal;
+        color: #142d4c;
+    }
+    .rating-color{
+        color:#f5d105 !important;
+    }
+    .ratings i{
+        font-size: 24px;
+    }
+    #background-svg{
+        background: rgb(255,255,255);
+        background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(148,145,149,1) 100%);
+    }
+    .custom-container-paginator {
+        border: 2px solid #d3d3d3; 
+        border-radius: 8px; 
+        background-color: #f0f0f0; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        padding: 5px; 
+        background-color: white;
+        margin-bottom: 32px;
+    }
+    
+</style>
+<!--
+<div class="n_text"> {{ page_obj.paginator.count }} risultati trovati | Pagina {{page_obj.number}} </div>
+        <ul class="pagination mt-2 mb-0 justify-content-center n_text">
+        <li class="page-item">
+            {% if page_obj.has_previous %}
+                <a class='btn' href="?{% if request.GET.query %}query={{ request.GET.query }}{% endif %}{% if request.GET.coach %}&coach={{ request.GET.coach }}{% endif %}{% if request.GET.paid %}&paid={{ request.GET.paid }}{% endif %}{% if request.GET.free %}&free={{ request.GET.free }}{% endif %}{% if request.GET.level %}&level={{ request.GET.level }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}{% if request.GET.order_by %}&order_by={{ request.GET.order_by }}{% endif %}&page={{ page_obj.previous_page_number }}"><</a>
+            {% endif %}
+        </li>
+        <li class="page-item">
+            {% if page_obj.has_next %}
+                <a class='btn' href="?{% if request.GET.query %}query={{ request.GET.query }}{% endif %}{% if request.GET.coach %}&coach={{ request.GET.coach }}{% endif %}{% if request.GET.paid %}&paid={{ request.GET.paid }}{% endif %}{% if request.GET.free %}&free={{ request.GET.free }}{% endif %}{% if request.GET.level %}&level={{ request.GET.level }}{% endif %}{% if request.GET.ordering %}&ordering={{ request.GET.ordering }}{% endif %}{% if request.GET.order_by %}&order_by={{ request.GET.order_by }}{% endif %}&page={{ page_obj.next_page_number }}">></a>
+            {% endif %}
+        </li>
+      </ul>
+    </div>
+
+-->
+
 <div class="container py-5">
-    {% if object_list.count > 0 %}
-        <h1> {{ object_list.count }} {{ view.get_model_name }} trovati. </h1>
+    {% if object_list %}
+        <h1 id="font-campi-trovati"> {{ page_obj.paginator.count }} {{ view.get_model_name }} trovati. </h1>
+
         <div class="row row-cols-1 row-cols-md-3 g-4 py-5">
-        {% for campo in object_list %}
-            {% include "core/card.html" with id_campo=campo.id tipo_sport=campo.get_tipo_sport_display coperto=campo.coperto costo=campo.costo servizi=campo.servizi struttura=campo.struttura %}
+        {% for campo, voto in object_list %}
+            {% include "core/card.html" with img=campo.img voto=voto id_campo=campo.id tipo_sport=campo.get_tipo_sport_display coperto=campo.coperto costo=campo.costo servizi=campo.servizi struttura=campo.struttura %}
         {% endfor %}
+        </div>
     {% else %}
         <p>Nessun campo trovato.</p>
     {% endif %}
-    </div>
 </div>
+
+<div class="container custom-container-paginator" style="text-align:center">
+    <b>
+    <div class="row">
+        <div class="col">
+            <div class="n_text"> {{ page_obj.paginator.count }} risultati trovati</div> 
+        </div>
+        <div class="col">
+            <div>Pagina {{ page_obj.number }} </div>
+        </div>
+        <div class="col">
+            {% if page_obj.has_previous %}
+                <a class="text-decoration-underline"  style="color:blue; margin-right: 5px;" href="?page={{ page_obj.previous_page_number }}{% if request.GET.tipo_sport %}&tipo_sport={{ request.GET.tipo_sport }}{% endif %}{% if request.GET.luogo %}&luogo={{ request.GET.luogo }}{% endif %}" >Precedente</a>
+            {% endif %}
+            
+            {% if page_obj.has_next %}
+                <a class="text-decoration-underline" style="color:blue; margin-left: 5px;" href="?page={{ page_obj.next_page_number }}{% if request.GET.tipo_sport %}&tipo_sport={{ request.GET.tipo_sport }}{% endif %}{% if request.GET.luogo %}&luogo={{ request.GET.luogo }}{% endif %}" >Successiva</a>
+            {% endif %}
+        </div>
+    </div>
+    </b>
+</div>
+
 {% endblock %}

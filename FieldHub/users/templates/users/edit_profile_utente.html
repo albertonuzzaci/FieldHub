@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Edit profile page{% endblock title %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+
+{% block content %}
+
+    <style>
+        .image-container {
+            width: 170px;
+            height: 170px;
+            border: solid;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;  /* Aggiungi questa riga per centrare il contenitore dell'immagine */
+        }
+        
+        .image-container img {
+            width: 150%;
+            height: 150%;
+            object-fit: cover;
+        }
+    </style>
+<!-- Modal -->
+
+  
+  <!-- Codice esistente -->
+  <div class="container mt-5">
+      <div class="row justify-content-center">
+          <div class="col-md-6">
+              <section>
+                  <div class="container">
+                      <div class="row">
+                          <div class="mx-auto">
+                              <div class="card">
+                                  <div class="card-header text-black text-center">
+                                      <h2>Profilo di {{ user.username }}</h2>
+                                  </div>
+                                  <div class="card-body">
+                                      <form method="post" enctype="multipart/form-data">
+                                          {% csrf_token %}
+                                          <div class="row pt-3 justify-content-center">
+                                            <div class="col form-group">
+                                                <div class="col">
+                                                    <label for="id_img"><strong>Immagine </strong></label>     
+                                                </div>
+                                                <div class="col">
+                                                    <input type="file" id="id_img" name="img" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                          <div class="row pt-3 justify-content-center">
+                                            <div class="col">
+                                                <strong>Nome</strong>
+                                            </div>
+                                            <div class="col form-group">
+                                                <input type="text" id="id_nome" name="nome" value="{{ inital_data.init_nome }}" class="form-control">
+                                            </div>
+                                        </div>
+                                          <div class="row pt-3 justify-content-center">
+                                              <div class="col">
+                                                  <strong>Cognome</strong>
+                                              </div>
+                                              <div class="col">
+                                                  <div class="form-group">
+                                                      <input type="text" id="id_cognome" name="cognome" value="{{ inital_data.init_cognome }}" class="form-control">
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="row pt-3 justify-content-center">
+                                              <div class="col">
+                                                  <strong>Email</strong>
+                                              </div>
+                                              <div class="col form-group">
+                                                  <input type="text" id="id_email" name="email" value="{{ inital_data.init_email }}" class="form-control">
+                                              </div>
+                                          </div>
+                                          <div class="row pt-3 justify-content-center">
+                                              <div class="col">
+                                                  <strong>Numero di telefono</strong>
+                                              </div>
+                                              <div class="col form-group">
+                                                  <input type="text" id="id_numTelefono" name="numTelefono" value="{{ inital_data.init_numTelefono }}" class="form-control">
+                                              </div>
+                                          </div>
+                                          <div class="row pt-3 justify-content-center">
+                                              <button type="reset" class="btn btn-block btn-primary m-2" style="font-weight:bold">Reset</button>
+                                              <button type="submit" class="btn btn-block btn-primary m-2" style="font-weight:bold">Conferma</button>
+                                          </div>
+                                      </form>
+                                  </div>
+                              </div>   
+                          </div>
+                      </div>
+                  </div>
+              </section>
+          </div>
+      </div>
+  </div>
+  
+  <script>
+    document.getElementById('reset-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        var initialData = {
+            nome: "{{ inital_data.init_nome }}",
+            cognome: "{{ inital_data.init_cognome }}",
+            email: "{{ inital_data.init_email }}",
+            numTelefono: "{{ inital_data.init_numTelefono }}"
+        };
+    
+        document.getElementById('id_nome').value = initialData.nome;
+        document.getElementById('id_cognome').value = initialData.cognome;
+        document.getElementById('id_email').value = initialData.email;
+        document.getElementById('id_numTelefono').value = initialData.numTelefono;
+    });
+</script>
+
+
+{% endblock content %}

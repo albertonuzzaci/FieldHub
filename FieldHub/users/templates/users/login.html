@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %} Registrazione Utente {% endblock %} 
+
+{% block content %} 
+
+<section>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 mx-auto">
+        <div class="card">
+          <div class="card-header text-black text-center">
+            <h2>Login</h2>
+          </div>
+          <div class="card-body">
+            <form action="{% url 'users:login' %}" method="POST" novalidate>
+              <div class = "row">
+                {% csrf_token %}
+                   {% for field in form.visible_fields %}
+                     <div class="form-group">
+                         {{ field.label }}
+                            {% render_field field class="form-control" %}
+                              {% if messages%}
+                                {% for message in messages %}
+                                  <span style="color:red">{{ message }}</span>
+                                {% endfor %}
+                               {% endif %}
+                   {% endfor %}
+              </div>
+              <div class = "row pt-3 justify-content-center">
+                <input type="submit" value="Login" class="btn btn-block btn-primary" style="font-weight : bold">              </div>
+                </div>
+              </form>
+           </div>
+              </div>   
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+{% endblock %}

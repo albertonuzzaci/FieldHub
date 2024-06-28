@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Prenotazioni di {{ user.username }}{% endblock %}
+
+{% block content %}
+
+
+{% if "ok" in request.GET.review %}
+<div id="info" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title">Recensione salvata con successo!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Chiudi</button>
+        </div>
+    </div>
+    </div>
+</div> 
+<script>
+    $(document).ready(function(){
+        $("#info").modal('show');
+    });
+</script>
+{% endif %}
+{% if "no" in request.GET.review %}
+    <div id="error-info" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Errore durante l'aggiunta della recensione</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $("#error-info").modal('show');
+        });
+    </script>
+{% endif %}
+
+
+
+
+<div class="container">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <section>
+                    <div class="container">
+                        <div class="row">
+                            <div class="mx-auto">
+                                <div class="card">
+                                    <div class="card-header text-black text-center">
+                                        <h2>Prenotazioni di {{ user.username }}</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        {% if prenotazioni_vecchie %}
+                                            {% for prenotazione, has_recensione in prenotazioni_vecchie.items %}
+                                                <div class="row">
+                                                    <div class="col"><strong>Data:</strong> {{ prenotazione.data|date:"d F Y" }} </div>
+                                                    <div class="col"><strong>Ora:</strong> {{ prenotazione.ora }}</div>
+                                                    <div class="col"><strong>Campo:</strong><a href="{% url 'core:visualizza_campo' prenotazione.campo.id  %}"> {{ prenotazione.campo.get_tipo_sport_display }}</a></div>
+                                                    <div class="col"><strong>Costo:</strong> {{ prenotazione.campo.costo }}€</div>
+                                                    <div class="col"><strong>Struttura:</strong> <a href="{% url 'core:visualizza_struttura' prenotazione.campo.struttura.id %}"> {{ prenotazione.campo.struttura.nome_struttura }} </a></div>
+                                                    <div class="col little-container">
+                                                        <!-- Bottone per aprire il modal di conferma -->
+                                                        <button type="button" class="btn btn-outline-warning custom-center {% if has_recensione %}disabled-btn{% endif %}"
+                                                            {% if not has_recensione %}
+                                                                data-toggle="modal" data-target="#modal-recensione-{{ prenotazione.id }}" 
+                                                            {% else %}
+                                                                disabled style="border: 1px solid #ccc; padding: 5px 10px; color:gray"
+                                                            {% endif %}>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                                            </svg>
+                                                            Recensisci
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                {% if not has_recensione %}
+                                                    <div class="modal fade" id="modal-recensione-{{ prenotazione.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-recensione-label-{{ prenotazione.id }}" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="modal-recensione-label-{{ prenotazione.id }}">Recensione per la prenotazione del {{prenotazione.campo.get_tipo_sport_display }} di {{ prenotazione.struttura.nome_struttura }}</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form method="post" action="{% url 'core:salva_recensione' prenotazione.id %}">
+                                                                    {% csrf_token %}
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <label for="id_voto">Voto (da 1 a 5):</label>
+                                                                            <input type="number" id="id_voto" name="voto" min="1" max="5" class="form-control" required>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="id_testo">Recensione:</label>
+                                                                            <textarea id="id_testo" name="testo" rows="4" class="form-control" required></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+                                                                        <button type="submit" class="btn btn-primary">Conferma</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <hr>
+                                            {% endfor %}
+
+                                            <!-- Paginazione prenotazioni vecchie -->
+                                            <div class="pagination-container">
+                                                <nav aria-label="Page navigation">
+                                                    <ul class="pagination justify-content-center">
+                                                        {% if prenotazioni_vecchie_page_obj.has_previous %}
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="?page_vecchie={{ prenotazioni_vecchie_page_obj.previous_page_number }}&page_future={{prenotazioni_future_page_obj.number}}">Precedente</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        <!--
+                                                        {% for num in prenotazioni_vecchie_page_obj.paginator.page_range %}
+                                                            <li class="page-item {% if prenotazioni_vecchie_page_obj.number == num %}active{% endif %}">
+                                                                <a class="page-link" href="?page_vecchie={{ num }}">{{ num }}</a>
+                                                            </li>
+                                                        {% endfor %}
+                                                        -->
+                                                        {% if prenotazioni_vecchie_page_obj.has_next %}
+                                                            
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="?page_vecchie={{ prenotazioni_vecchie_page_obj.next_page_number }}&page_future={{prenotazioni_future_page_obj.number}}">Successiva</a>
+                                                            </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        {% else %}
+                                            <h2>Nessuna prenotazione da recensire</h2>
+                                        {% endif %}
+
+                                        {% if prenotazioni_future %}
+                                            {% for prenotazione in prenotazioni_future %}
+                                                <div class="row">
+                                                    <div class="col"><strong>Data:</strong> {{ prenotazione.data|date:"d F Y" }} </div>
+                                                    <div class="col"><strong>Ora:</strong> {{ prenotazione.ora }}</div>
+                                                    <div class="col"><strong>Campo:</strong><a href="{% url 'core:visualizza_campo' prenotazione.campo.id  %}"> {{ prenotazione.campo.get_tipo_sport_display }}</a></div>
+                                                    <div class="col"><strong>Costo:</strong> {{ prenotazione.campo.costo }}€</div>
+                                                    <div class="col"><strong>Struttura:</strong> <a href="{% url 'core:visualizza_struttura' prenotazione.campo.struttura.id %}"> {{ prenotazione.campo.struttura.nome_struttura }} </a></div>
+                                                    <div class="col little-container">
+                                                        <!-- Bottone per aprire il modal di conferma -->
+                                                        <button type="button" class="btn btn-outline-danger custom-center" data-toggle="modal" data-target="#modal-elimina-{{ prenotazione.id }}">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="16" fill="currentColor" class="bi bi-trash">
+                                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"></path>
+                                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"></path>
+                                                            </svg>
+                                                            Elimina
+                                                        </button>
+                                                        <div class="modal fade" id="modal-elimina-{{ prenotazione.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-elimina-{{ prenotazione.id }}-label" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="modal-elimina-{{ prenotazione.id }}-label">Conferma eliminazione</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <ul>
+                                                                            Sei sicuro di voler eliminare la prenotazione per il {{ prenotazione.data|date:"d F Y" }} alle ore {{ prenotazione.ora }}?
+                                                                        </ul>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
+                                                                        <a href="{% url 'core:elimina_prenotazione' prenotazione.id %}" class="btn btn-danger" style="font-weight: bold">Elimina</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            {% endfor %}
+
+                                            <!-- Paginazione prenotazioni future -->
+                                            <div class="pagination-container">
+                                                <nav aria-label="Page navigation">
+                                                    <ul class="pagination justify-content-center">
+                                                        {% if prenotazioni_future_page_obj.has_previous %}
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.previous_page_number }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">Precedente</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        <!--
+                                                        {% for num in prenotazioni_future_page_obj.paginator.page_range %}
+                                                            <li class="page-item {% if prenotazioni_future_page_obj.number == num %}active{% endif %}">
+                                                                <a class="page-link" href="?page_future={{ num }}">{{ num }}</a>
+                                                            </li>
+                                                        {% endfor %}
+                                                        -->
+                                                        {% if prenotazioni_future_page_obj.has_next %}
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.next_page_number }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">Successiva</a>
+                                                            </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        {% else %}
+                                            <h2>Nessuna prenotazione futura</h2>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    
+{% endblock %}

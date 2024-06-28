@@ -1,0 +1,41 @@
+<div class="container clearfix py-3 border rounded fourth-color text-first-color">
+    <div class="fancy-title title-bottom-border">
+        <h1>{{ struttura.nome_struttura }}</h1>
+    </div>
+    <div class="container py-2 text-fourth-color " >
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card border rounded border-secondary h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">Chi siamo</h2>
+                        <p id="info" class="card-text">{{ struttura.descrizione }}</p>
+                        <h4 class="card-title">Altri nostri campi</h4>
+                        <ul>
+                            {% for campo in struttura.campo_set.all %}
+                                {% if campo.id != object.id %}
+                                    <a href="{% url 'core:visualizza_campo' campo.id  %}"> <p id="info" > {{ campo.get_tipo_sport_display }} - {{ campo.coperto|yesno:"Coperto,Scoperto" }} - {{ campo.costo }}€ </p></a>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card border rounded border-secondary h-100">
+                    <div class="card-body ">
+                        <h2 class="card-title pb-3">Contatti</h2>
+                        <div class="mb-2">
+                            <p id="info"> {{ struttura.indirizzo }} {{ struttura.num_civico }}, {{ object.struttura.citta }} </p>
+                        </div>
+                        <div class="mb-2">
+                            <p id="info"> {{ struttura.numTelefono }} </p>
+                        </div>
+                        <div>
+                            <p id="info"> <a href="mailto:{{ struttura.email }}">{{ struttura.email }}</a> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

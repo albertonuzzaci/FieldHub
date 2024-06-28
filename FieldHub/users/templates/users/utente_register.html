@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %} Registrazione Utente {% endblock %} 
+
+{% block content %} 
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post">
+                {% csrf_token %}
+                <section>
+                    <div class="container">
+                        <div class="row">
+                            <div class="mx-auto ">
+                                <div class="card">
+                                    <div class="card-header text-black text-center">
+                                        <h2>Registrazione Utente</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row pt-3 justify-content-center">
+                                            {% csrf_token %}
+                                            {% for field in form.visible_fields %}
+                                            <div class="form-group">
+                                                <label for="{{ field.id_for_label }}">
+                                                    {% if field.label == "Password confirmation" %}
+                                                        Conferma della Password
+                                                    {% else %}
+                                                        {{ field.label }}
+                                                    {% endif %}
+                                                </label>
+                                                {% render_field field class="form-control" %}
+                                                {% for error in field.errors %}
+                                                    <span style="color:red">{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                            {% endfor %}
+                                        </div >                                        
+                                        <form action="{% url 'users:utente_registration' %}" method="POST" novalidate>
+                                            <div class="row pt-3 justify-content-center">
+                                                <input type="submit" value="Conferma" class="btn btn-block btn-primary" style="font-weight : bold">
+                                            </div >                                        
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+{% endblock %}

@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Profilo di {{ user.username }} {% endblock %}
+
+{% block content %}
+    <style>
+        .image-container {
+            width: 170px;
+            height: 170px;
+            border: solid;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;  /* Aggiungi questa riga per centrare il contenitore dell'immagine */
+        }
+        
+        .image-container img {
+            width: 150%;
+            height: 150%;
+            object-fit: cover;
+        }
+    </style>
+    {% if "ok" in request.GET.modified %}
+    <div id="info" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">Modifiche avvenute con succcesso!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal">Chiudi</button>
+            </div>
+        </div>
+        </div>
+    </div> 
+    <script>
+        $(document).ready(function(){
+            $("#info").modal('show');
+        });
+    </script>
+
+    {% endif %}
+    {% if "no" in request.GET.modified %}
+        <div id="error-info" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Errore durante l'operazione!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>I seguenti campi non erano in un formato valido</p>
+                        <ul>
+                            {% for key, value in request.GET.items %}
+                                {% if key != "modified" %}
+                                    <li>{{ key }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Chiudi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function(){
+                $("#error-info").modal('show');
+            });
+        </script>
+    {% endif %}
+
+
+    {% if user.is_utente %}        
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <section>
+                        <div class="container">
+                            <div class="row">
+                                <div class="mx-auto ">
+                                    <div class="card">
+                                        <div class="card-header text-black text-center">
+                                            <h2>Profilo di {{ user.username }}</h2>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <div class=" image-container">
+                                                        <img src={{user.img.url}} >                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Nome</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ user.nome }}
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Cognome</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ user.cognome }}
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Email</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ utente.email }}
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Numero di telefono</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ utente.numTelefono }}
+                                                </div>
+                                            </div>
+
+                                             
+                                            <div class="row pt-3 justify-content-center">
+                                                <a href="{% url 'users:update_profile' %}" class="btn btn-primary" style="font-weight: bold">Modifica</a>
+                                                
+                                            </div>
+                                                                             
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+    {% elif user.is_propStruttura %}
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <section>
+                        <div class="container">
+                            <div class="row">
+                                <div class="mx-auto ">
+                                    <div class="card">
+                                        <div class="card-header text-black text-center">
+                                            <h2>Profilo di {{ user.username }}</h2>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <div class=" image-container">
+                                                        <img src={% static user.img %}>                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Nome</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ proprietario.user.nome }}
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Cognome</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ proprietario.user.cognome }}
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row pt-3 justify-content-center">
+                                                <h3 style="text-align: center; color:black"> Dati della struttura </h3>
+                                            </div>
+
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Nome della struttura</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ proprietario.struttura.nome_struttura }}
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Citta</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ proprietario.struttura.citta }}
+                                                </div>
+                                            </div>
+
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Indirizzo</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ proprietario.struttura.indirizzo }}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Numero civico</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ proprietario.struttura.num_civico }}
+                                                </div>
+                                            </div>
+
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Descrizione</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ proprietario.struttura.descrizione }}
+                                                </div>
+                                            </div>
+
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Email</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ proprietario.struttura.email }}
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row pt-3 justify-content-center">
+                                                <div class="col">
+                                                    <strong>Numero di telefono</strong>
+                                                </div>
+                                                <div class="col">
+                                                    {{ proprietario.struttura.numTelefono }}
+                                                </div>
+                                            </div>
+
+                                            <div class="row pt-3 justify-content-center">
+                                                <a href="{% url 'users:update_profile' %}" class="btn btn-primary" style="font-weight: bold">Modifica</a>
+                                            </div >                                        
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
