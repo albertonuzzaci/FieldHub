@@ -7,10 +7,11 @@ from django.views import View
 from django.urls import reverse
 from django.db.models import Avg
 
+
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.utils import timezone
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 
@@ -18,11 +19,10 @@ from .models import Campo, Prenotazione, Struttura, Recensione
 from .form import CreaCampoForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from users.models import ProprietarioStruttura, User, Utente
-from django.contrib import messages
+from users.models import ProprietarioStruttura, Utente
 
 from datetime import datetime
-#---------------PERMESSI--------------
+#---------------PERMESSI--------------    
 class UtenteNormale(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -36,15 +36,14 @@ class UtenteNormale(LoginRequiredMixin):
 class UtenteStruttura(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            print("quaaa")
             return self.handle_no_permission()
         
         if request.user.is_utente:
-            print("qua")
             raise PermissionDenied
         
         return super().dispatch(request, *args, **kwargs)
 #---------------CBV--------------------
+
 class ListaCampiView(ListView):
     model = Campo
     template_name = 'core/listacampi.html'
@@ -57,12 +56,23 @@ class ListaCampiView(ListView):
     def get_queryset(self):
         tipo_sport = self.request.GET.get('tipo_sport')
         luogo = self.request.GET.get('luogo')
-        
+        ordinamento = self.request.GET.get('ordinamento', 'voto_medio')  # Default to 'voto_medio'
+        ordine = self.request.GET.get('ordine', 'asc')  # Default to 'asc'
+
         queryset = Campo.objects.all()
+
         if tipo_sport:
             queryset = queryset.filter(tipo_sport=tipo_sport)
         if luogo:
-            queryset = queryset.filter(luogo=luogo)
+            queryset = queryset.filter(struttura__citta__icontains=luogo) # case insensitive
+        
+        queryset = queryset.annotate(voto_medio=Avg('recensioni__voto'))
+
+        if ordinamento:
+            if ordine == 'asc':
+                queryset = queryset.order_by(ordinamento)
+            elif ordine == 'desc':
+                queryset = queryset.order_by(f'-{ordinamento}')
         
         return queryset
     
@@ -74,14 +84,13 @@ class ListaCampiView(ListView):
         campi_dict = {}
         
         for campo in campi:
-            voto_medio = Recensione.objects.filter(campo=campo).aggregate(media=Avg('voto'))['media']
+            voto_medio = campo.voto_medio
             if voto_medio is None:
                 voto_medio = "-"
             else:
                 voto_medio = round(voto_medio, 1)
             campi_dict[campo] = voto_medio
 
-        # Gestione della paginazione
         paginator = Paginator(list(campi_dict.items()), self.paginate_by)
         page = self.request.GET.get('page')
         
@@ -95,10 +104,17 @@ class ListaCampiView(ListView):
         context['object_list'] = campi_paginati
         context['campi_dict'] = dict(campi_paginati)
         context['page_obj'] = campi_paginati
+
+        context['tipo_sport'] = self.request.GET.get('tipo_sport', '')
+        context['luogo'] = self.request.GET.get('luogo', '')
+        context['ordinamento'] = self.request.GET.get('ordinamento', 'voto_medio')  # Default to 'voto_medio'
+        context['ordine'] = self.request.GET.get('ordine', 'asc')  # Default to 'asc'
+        
         return context
     
 class PrenotazioneConfermataView(TemplateView):
     template_name = 'core/prenotazione_confermata.html'
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -130,39 +146,7 @@ class PrenotazioneConfermataView(TemplateView):
         context['campo'] = campo
         
         return context
-'''
-class PrenotazioniUtenteView(UtenteNormale, TemplateView):
-    template_name = 'core/prenotazioni_utente.html'  # Nome del template da creare
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        user = self.request.user
-        utente =  Utente.objects.get(user=user)
-       
-        now = timezone.now()
-        prenotazioni_vecchie = Prenotazione.objects.filter(
-            utente__user=user,
-            data__lte=now.date(),
-        ).order_by('data', 'ora')
-
-        # Creazione del dizionario per memorizzare l'esistenza della recensione
-        prenotazioni_dict = {}
-
-        for prenotazione in prenotazioni_vecchie:
-            # Verifichiamo se esiste una recensione per quella prenotazione da parte dell'utente per il campo della prenotazione
-            has_recensione = Recensione.objects.filter(utente=utente, campo=prenotazione.campo).exists()
-            prenotazioni_dict[prenotazione] = has_recensione
-            
-        context['prenotazioni_vecchie'] = prenotazioni_dict
-        
-        context['prenotazioni_future'] = Prenotazione.objects.filter(
-            utente__user=user,
-            data__gt=now.date()
-        ).order_by('data', 'ora')
-        
-        return context
-'''
 class PrenotazioniUtenteView(UtenteNormale, TemplateView):
     template_name = 'core/prenotazioni_utente.html'  # Nome del template da creare
     paginate_by = 4  # Numero di prenotazioni per pagina
@@ -222,35 +206,30 @@ class PrenotazioniUtenteView(UtenteNormale, TemplateView):
         return context
     
 class PrenotazioniStrutturaView(UtenteStruttura, TemplateView):
-    template_name = 'core/prenotazioni_struttura.html'  # Nome del template da creare
-    paginate_by = 5  # Numero di prenotazioni per pagina
+    template_name = 'core/prenotazioni_struttura.html'  
+    paginate_by = 7  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         user = self.request.user
         struttura = get_object_or_404(ProprietarioStruttura, user=user).struttura
-        
         prenotazioni = Prenotazione.objects.filter(struttura=struttura).order_by('data', 'ora')
-        
-        # Paginazione delle prenotazioni
         paginator = Paginator(prenotazioni, self.paginate_by)
         page = self.request.GET.get('page')
-        
+
         try:
             prenotazioni_paginati = paginator.page(page)
         except PageNotAnInteger:
             prenotazioni_paginati = paginator.page(1)
         except EmptyPage:
             prenotazioni_paginati = paginator.page(paginator.num_pages)
-        
+
         context['prenotazioni'] = prenotazioni_paginati
         context['page_obj'] = prenotazioni_paginati
-        
+
         return context
 
-
-class DetailCampoView(ListView):
+class DetailCampoView(UtenteNormale, ListView):
     model = Recensione
     template_name = "core/visualizza_campo.html"
     context_object_name = 'recensioni'
@@ -279,11 +258,10 @@ class DetailStrutturaView(UtenteNormale, View):
         
         return render(request, self.template_name, {'object': struttura})
    
-class CercaCampoListView(ListView):
+class CercaCampoListView(UtenteNormale, ListView):
     model = Campo
     template_name = 'core/cerca_campo.html'
     context_object_name = 'campi'
-    #paginate_by = 10  
     
     def get_queryset(self):
         tipo_sport_query = self.request.GET.get('tipo_sport', '')
@@ -387,3 +365,27 @@ def salva_recensione(request, prenotazione_id):
             return redirect(reverse('core:prenotazioni_utente') + '?review=no')
     return redirect('core:prenotazioni_utente')
 
+def esporta_prenotazioni(request):
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        user = request.user
+        struttura = get_object_or_404(ProprietarioStruttura, user=user).struttura
+
+        prenotazioni = Prenotazione.objects.filter(
+            struttura=struttura,
+            data__range=[start_date, end_date]
+        ).order_by('data', 'ora')
+
+        # Creazione del contenuto del file TXT
+        lines = []
+        for prenotazione in prenotazioni:
+            line = f"Data: {prenotazione.data.strftime('%d %B %Y')}, Ora: {prenotazione.ora}, Campo: {prenotazione.campo.get_tipo_sport_display()}, Utente: {prenotazione.utente.user.username}\n"
+            lines.append(line)
+        txt_content = "\n".join(lines)
+
+        response = HttpResponse(txt_content, content_type='text/plain')
+        response['Content-Disposition'] = f'attachment; filename="prenotazioni_{start_date}_to_{end_date}.txt"'
+        #attachment serve per scaricare altrimenti si vede solo nel browser
+
+        return response

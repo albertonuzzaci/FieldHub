@@ -16,6 +16,12 @@
                     <div class="card-body">
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
+                            <div class="form-group row m-1">  
+                                    <label for="id_img" class="col-md-4 col-form-label text-md-right"><strong>Immagine </strong></label>     
+                                    <div class="col-md-6">
+                                        <input type="file" id="id_img" name="img" class="form-control">
+                                    </div>
+                            </div>
                             <div class="form-group row m-1">
                                 <label for="id_nome" class="col-md-4 col-form-label text-md-right"><strong>Nome</strong></label>
                                 <div class="col-md-6">

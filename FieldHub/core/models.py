@@ -9,13 +9,9 @@ class Struttura(models.Model):
     num_civico =models.IntegerField()
     descrizione = models.TextField()
     email = models.CharField(max_length=150)
-    numTelefono = models.CharField(max_length=20#, 
-        #validators=[
-        #RegexValidator(
-        #    regex =  r'^(?:\+39)?\d{11}$',            
-        #    message="Il numero di telefono deve essere nel formato corretto."
-        #)
-    #]
+    verified = models.BooleanField(default=False)
+
+    numTelefono = models.CharField(max_length=20
     )
    
     def __str__(self):

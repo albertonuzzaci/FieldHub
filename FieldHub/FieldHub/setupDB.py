@@ -6,6 +6,7 @@ from users.models import ProprietarioStruttura, User, Utente
 from datetime import datetime, timedelta
 from django.utils import timezone
 from FieldHub.settings import STATIC_URL
+import glob
 
 def erase_db():
     print("Cancello il DB")
@@ -15,7 +16,14 @@ def erase_db():
     User.objects.all().delete()
     Prenotazione.objects.all().delete()
     Recensione.objects.all().delete()
-        
+    image_folder_paths = [
+    'static/img/default_img/profile_pic',
+    'static/img/default_img/field_pic'
+    ]
+    for folder in image_folder_paths:
+            files = glob.glob(os.path.join(folder, '*'))
+            for f in files:
+                os.remove(f)
 
 def init_db():
     

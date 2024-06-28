@@ -1,12 +1,13 @@
 from django.shortcuts import redirect
 from django.urls import reverse
-
+from django.contrib.auth import logout
 def home_page(request):
     
     is_login = request.GET.get('login') == 'ok'
     is_logout = request.GET.get('logout') == 'ok'
     
     user = request.user
+
     if user.is_authenticated and user.is_propStruttura:
         url = reverse('core:gestisci_campi')
             
@@ -22,6 +23,10 @@ def home_page(request):
     if is_logout:
         return redirect(f'{url}?logout=ok')
     
+    if user.is_staff:
+        logout(request)
+        url = reverse('core:cerca_campo')
+        
     return redirect(url)
     
 

@@ -24,7 +24,7 @@ from .setupDB import *
 from .views import *
 from django.conf.urls.static import static
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name="adminpage"),
     path('core/', include('core.urls')),
     path('users/', include('users.urls')),
     re_path(r'^$|^/$|^home/$', home_page, name='homepage')

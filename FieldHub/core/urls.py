@@ -19,5 +19,7 @@ urlpatterns = [
     path("eliminacampo/<int:pk>/", elimina_campo, name="elimina_campo"),
     path("home/", home_page, name="homepage"),
     path('ore_libere/<int:campo_id>/<str:data>/', ore_libere, name='ore_libere'),
-    path("eliminaprenotazione/<int:pk>/", elimina_prenotazione, name="elimina_prenotazione")
+    path("eliminaprenotazione/<int:pk>/", elimina_prenotazione, name="elimina_prenotazione"),
+    path('esporta_prenotazioni/', esporta_prenotazioni, name='esporta_prenotazioni'),
+
 ]

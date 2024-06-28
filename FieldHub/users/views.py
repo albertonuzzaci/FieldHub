@@ -39,12 +39,11 @@ def propStrutturaUpdateView(request):
     print(initial_data)
     if request.method == 'POST':
         struttura_form = UpdateStrutturaForm(request.POST, instance=struttura)
-        user_form = UpdateUserForm(request.POST, instance=request.user)
+        user_form = UpdateUserForm(request.POST, request.FILES, instance=request.user)
         
         if user_form.is_valid() and struttura_form.is_valid():
             struttura_form.save()
             user_form.save()
-            print("success")
             return redirect('/users/profile/?modified=ok')
         else:
             error_fields = [
@@ -74,20 +73,17 @@ def utenteUpdateView(request):
         'init_nome': request.user.nome,
         'init_cognome': request.user.cognome,
         'init_email': utente.email,
-        'init_numTelefono': utente.numTelefono,
-        'init_img': request.user.img
+        'init_numTelefono': utente.numTelefono
     }
     
     if request.method == 'POST':
         utente_form = UpdateUtenteForm(request.POST, instance=utente)
         user_form = UpdateUserForm(request.POST, request.FILES, instance=request.user)
-        print("POST data:", request.POST)
-        print("FILES data:", request.FILES)
+
         if utente_form.is_valid() and user_form.is_valid():
             print(user_form)
             utente_form.save()
             user_form.save()
-            print("success")
             return redirect('/users/profile/?modified=ok')
         else:
             error_fields = [
