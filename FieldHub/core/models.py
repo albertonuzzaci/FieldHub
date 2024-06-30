@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Struttura(models.Model):
     nome_struttura = models.CharField(max_length=255)
-    citta = models.CharField(max_length=255)
+    citta = models.CharField(max_length=100)
     indirizzo = models.CharField(max_length=255)
     num_civico =models.IntegerField()
     descrizione = models.TextField()
