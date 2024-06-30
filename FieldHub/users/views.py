@@ -2,13 +2,19 @@ from django.views.generic import CreateView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.crypto import get_random_string
 from django.core.exceptions import PermissionDenied
-
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib import messages
 from django.contrib.auth import login, logout,authenticate
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import render, redirect
 from .models import User, Utente, ProprietarioStruttura
 from users.form import *
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+
 def register(request):
     return render(request, 'users/register.html')
 
@@ -159,16 +165,13 @@ def login_request(request):
     return render(request, 'users/login.html',
     context={'form':AuthenticationForm()})
 
+@login_required
 def logout_view(request):
-    if not request.user.is_authenticated:
-        raise PermissionDenied
     logout(request)
     return redirect('/?logout=ok')
 
+@login_required
 def view_profile(request):
-    if not request.user.is_authenticated:
-        raise PermissionDenied
-    
     user = get_object_or_404(User, pk=request.user.pk)
     
     if user.is_utente:
@@ -188,10 +191,10 @@ def view_profile(request):
 
     return render(request, 'users/profile_detail.html', profile_data)
 
+
+
+@login_required
 def update_profile(request):
-    if not request.user.is_authenticated:
-        raise PermissionDenied
-    
     user = request.user
     if user.is_utente:
         utente_view = utenteUpdateView
@@ -202,7 +205,19 @@ def update_profile(request):
     else:
         raise Exception("Errore")
 
+@login_required
+def cambia_password(request):
+    
+    if request.method == 'POST':
+        form = CambiaPasswordForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  
+            return redirect(reverse('users:view_profile') + '?changed=ok')
+    else:
+        form = CambiaPasswordForm(request.user)
 
+    return render(request, 'users/cambia_password.html', {'form': form})
 '''
 from django.http import JsonResponse
 from django.core.files.storage import default_storage

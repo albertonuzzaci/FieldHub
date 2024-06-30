@@ -4,6 +4,7 @@ from django.db import transaction
 from .models import User,ProprietarioStruttura,Utente
 from django.core.validators import RegexValidator
 from core.models import Struttura
+from django.contrib.auth.forms import PasswordChangeForm
 
 class UtenteSignUpForm(UserCreationForm):
     nome = forms.CharField(required=True)
@@ -80,8 +81,6 @@ class ProprietarioStrutturaSignUpForm(UserCreationForm):
         
         return user
     
-
-
 class UpdateUserForm(forms.ModelForm):
     nome = forms.CharField(required=True,
                              widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -94,8 +93,6 @@ class UpdateUserForm(forms.ModelForm):
         model = User
         fields = ['nome','cognome','img']
     
-
-
 class UpdateUtenteForm(forms.ModelForm):
     email = forms.CharField(required=True,
                              widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -126,6 +123,34 @@ class UpdateStrutturaForm(forms.ModelForm):
         model = Struttura
         fields = ['nome_struttura', 'citta', 'indirizzo', 'num_civico', 'descrizione', 'email', 'numTelefono']
 
+class CambiaPasswordForm(PasswordChangeForm):
+    old_password = forms.CharField(
+        label="Password attuale",
+        widget=forms.PasswordInput(),
+        required=True,
+    )
+    new_password1 = forms.CharField(
+        label="Nuova password",
+        widget=forms.PasswordInput(),
+    )
+    new_password2 = forms.CharField(
+        label="Conferma password",
+        widget=forms.PasswordInput(),
+    )
 
+    #I metodi clean nei form di Django vengono chiamati automaticamente durante la validazione del form. 
+    def clean_old_password(self):
+        old_password = self.cleaned_data.get("old_password")
+        if not self.user.check_password(old_password):
+            raise forms.ValidationError("La password attuale non è corretta.")
+        return old_password
 
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password1 = cleaned_data.get("new_password1")
+        new_password2 = cleaned_data.get("new_password2")
 
+        if new_password1 and new_password2:
+            if new_password1 != new_password2:
+                raise forms.ValidationError("Le nuove password non coincidono.")
+        return cleaned_data

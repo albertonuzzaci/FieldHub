@@ -12,6 +12,7 @@ urlpatterns = [
     path('login/',login_request, name='login'),
     path('logout/',logout_view, name='logout'),
     path('profile/', view_profile, name='view_profile'),
-    path('updateprofile/', update_profile, name='update_profile')
+    path('updateprofile/', update_profile, name='update_profile'),
+    path('cambiapassword', cambia_password, name='cambia_password')
     #path('upload/', upload_image, name='upload_image')
 ]

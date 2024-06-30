@@ -80,6 +80,31 @@
     {% endif %}
 
 
+    <!-- Cambio password modal-->
+    {% if "ok" in request.GET.changed %}
+    <div id="info" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">Password cambiata con successo!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal">Chiudi</button>
+            </div>
+        </div>
+        </div>
+    </div> 
+    <script>
+        $(document).ready(function(){
+            $("#info").modal('show');
+        });
+    </script>
+
+    {% endif %}
+
     {% if user.is_utente %}        
         <div class="container mt-5">
             <div class="row justify-content-center">
@@ -135,9 +160,14 @@
 
                                              
                                             <div class="row pt-3 justify-content-center">
-                                                <a href="{% url 'users:update_profile' %}" class="btn btn-primary" style="font-weight: bold">Modifica</a>
-                                                
+                                                <div class="col-auto d-flex justify-content-center flex-wrap">
+                                                    <a href="{% url 'users:update_profile' %}" class="btn btn-primary m-2" style="font-weight: bold; min-width: 170px;">Modifica</a>
+                                                    <a href="{% url 'users:cambia_password' %}" class="btn btn-primary m-2 " style="font-weight: bold; min-width: 170px; white-space: nowrap;">Cambia Password</a>
+                                                </div>
                                             </div>
+                                            
+                                            
+                                            
                                                                              
                                         </div>
                                     </div>   
@@ -255,9 +285,11 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row pt-3 justify-content-center">
-                                                <a href="{% url 'users:update_profile' %}" class="btn btn-primary" style="font-weight: bold">Modifica</a>
-                                            </div >  
+                                            <div class="col-auto d-flex justify-content-center flex-wrap m-2">
+                                                <a href="{% url 'users:update_profile' %}" class="btn btn-primary m-2" style="font-weight: bold; min-width: 170px;">Modifica</a>
+                                                <a href="{% url 'users:cambia_password' %}" class="btn btn-primary m-2 " style="font-weight: bold; min-width: 170px; white-space: nowrap;">Cambia Password</a>
+                                            </div>
+                                            
                                             
                                             <hr>
                                             <div class="row pt-3 justify-content-center">
