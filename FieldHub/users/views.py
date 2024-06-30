@@ -1,27 +1,25 @@
-from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView
-from users.form import *
+from django.views.generic import CreateView
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.crypto import get_random_string
+from django.core.exceptions import PermissionDenied
+
+from django.contrib import messages
 from django.contrib.auth import login, logout,authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import redirect, render
+
 from .models import User, Utente, ProprietarioStruttura
-from django.contrib import messages
-from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
-from urllib.parse import urlencode
-
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-import os
-from django.utils.crypto import get_random_string
+from users.form import *
 def register(request):
     return render(request, 'users/register.html')
 
 def propStrutturaUpdateView(request):
+    
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    
+    if not request.user.is_propStruttura:
+        raise PermissionDenied
+    
     struttura = get_object_or_404(ProprietarioStruttura, user=request.user).struttura
     
     initial_data = {
@@ -68,6 +66,12 @@ def propStrutturaUpdateView(request):
                   )
 
 def utenteUpdateView(request):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    
+    if not request.user.is_utente:
+        raise PermissionDenied
+    
     utente = get_object_or_404(Utente, user=request.user)
     inital_data = {
         'init_nome': request.user.nome,
@@ -104,11 +108,17 @@ def utenteUpdateView(request):
                       'utente_form': utente_form,
                       'inital_data': inital_data
                   })
+
 class UtenteRegistrationView(CreateView):
     model = User
     form_class = UtenteSignUpForm
     template_name = 'users/utente_register.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+    
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
@@ -119,12 +129,20 @@ class PropStrutturaRegistrationView(CreateView):
     form_class = ProprietarioStrutturaSignUpForm
     template_name = 'users/propstruttura_register.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+    
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
         return redirect('/')
 
 def login_request(request):
+    if request.user.is_authenticated:
+            raise PermissionDenied
+        
     if request.method=='POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -142,10 +160,15 @@ def login_request(request):
     context={'form':AuthenticationForm()})
 
 def logout_view(request):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
     logout(request)
     return redirect('/?logout=ok')
 
 def view_profile(request):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    
     user = get_object_or_404(User, pk=request.user.pk)
     
     if user.is_utente:
@@ -154,15 +177,21 @@ def view_profile(request):
             'utente': get_object_or_404(Utente, user=user)
         }
     elif user.is_propStruttura:
+        admin_email = User.objects.filter(is_staff=True).values_list('email', flat=True).first()
+
         profile_data = {
             'user': user,
             'proprietario': get_object_or_404(ProprietarioStruttura, user=user),
-            'struttura': get_object_or_404(Struttura, pk=user.proprietariostruttura.struttura.pk)
+            'struttura': get_object_or_404(Struttura, pk=user.proprietariostruttura.struttura.pk),
+            'admin_email' : admin_email
         }
 
     return render(request, 'users/profile_detail.html', profile_data)
 
 def update_profile(request):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    
     user = request.user
     if user.is_utente:
         utente_view = utenteUpdateView
@@ -173,8 +202,8 @@ def update_profile(request):
     else:
         raise Exception("Errore")
 
-# views.py
 
+'''
 from django.http import JsonResponse
 from django.core.files.storage import default_storage
 
@@ -196,6 +225,7 @@ def upload_image(request):
     else:
         return JsonResponse({'error': 'Richiesta non valida'}, status=400)
 
+
 def save_image(img, save_path):
     # Genera un nome unico per l'immagine
     img_name = get_random_string(10) + '.jpg'
@@ -213,3 +243,4 @@ def save_image(img, save_path):
 
     # Ritorna il percorso relativo dell'immagine salvata
     return os.path.join(save_path, img_name)
+'''

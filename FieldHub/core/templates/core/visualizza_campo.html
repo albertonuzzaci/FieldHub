@@ -73,6 +73,38 @@
 </style>
 {% endblock%}
 {% block content %}
+
+{% if not object.struttura.verified %}
+<div class="modal fade" id="warning-modal" tabindex="-1" role="dialog" aria-labelledby="warning-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header fourth-color">
+                <h5 class="modal-title" id="warning-modal-label" style="color:yellow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                    </svg>
+                    Attenzione
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><b>La struttura {{object.struttura.nome_struttura}} non è stata verificata!</b></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#warning-modal').modal('show');
+    });
+</script>
+{% endif %}
         <!--CONTAINER PER LE INFO-->
         <div class="container mt-5">
             <div class="row" style="display:flex; flex-wrap:wrap">
@@ -165,7 +197,8 @@
                                                             <h2>Prenota campo</h2>
                                                         </div>
                                                         <div class="card-body">
-                                                            <form action="{% url 'core:prenotazione_confermata' %}" method="get">
+                                                            <form action="{% url 'core:prenotazione_confermata' %}" method="post">
+                                                                {% csrf_token %}
                                                                 <input type="hidden" name="id" value="{{ object.id }}">
                                                                 <div class="row py-3 justify-content-center align-items-center">
                                                                     <div class="input-group date" id="datepicker">
@@ -183,7 +216,6 @@
                                                                         <option value="10:00">10:00</option>
                                                                         <option value="11:00">11:00</option>
                                                                         <option value="12:00">12:00</option>
-                                                                        <!-- Al posto di queste ore ci andranno le ore libere-->
                                                                     </select>
                                                                 </div>
                                                                 <div class="row py-3 justify-content-center align-items-center">

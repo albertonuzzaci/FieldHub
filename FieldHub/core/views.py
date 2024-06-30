@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.crypto import get_random_string
+from django.db.models import Q
 
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
@@ -49,6 +51,11 @@ class ListaCampiView(ListView):
     template_name = 'core/listacampi.html'
     context_object_name = 'object_list'
     paginate_by = 6
+    
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_propStruttura: # accessibile ai non loggati e agli utenti normali / NON accessibile solo alle strutture
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
     
     def get_model_name(self):
         return self.model._meta.verbose_name_plural
@@ -112,67 +119,73 @@ class ListaCampiView(ListView):
         
         return context
     
-class PrenotazioneConfermataView(TemplateView):
+class PrenotazioneConfermataView(UtenteNormale, TemplateView):
     template_name = 'core/prenotazione_confermata.html'
 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
+    def post(self, request, *args, **kwargs):
         user = self.request.user
         utente = get_object_or_404(Utente, user=user)
-        
-        id_campo = self.request.GET.get('id')
+
+        id_campo = request.POST.get('id')
         campo = get_object_or_404(Campo, pk=id_campo)
-        
-        data = self.request.GET.get('data')
-        ora = self.request.GET.get('ora')
-        
+
+        data = request.POST.get('data')
+        ora = request.POST.get('ora')
+
         try:
             data = datetime.strptime(data, '%d/%m/%Y').date().isoformat()
         except ValueError:
             raise ValueError('Formato data non valido. Deve essere nel formato DD/MM/YYYY.')
-        
-        new_prenotazione, _ = Prenotazione.objects.get_or_create(
+
+        if Prenotazione.objects.filter(
+            utente=utente,
+            campo=campo,
+            data=data,
+            ora=ora,
+            struttura=campo.struttura
+        ).exists():
+            raise ValueError('Prenotazione già esistente per la data e ora selezionate.')
+
+        Prenotazione.objects.create(
             utente=utente,
             campo=campo,
             data=data,
             ora=ora,
             struttura=campo.struttura
         )
-        
+
+        context = self.get_context_data()
         context['data'] = data
         context['ora'] = ora
         context['campo'] = campo
-        
-        return context
+
+        return self.render_to_response(context)
 
 class PrenotazioniUtenteView(UtenteNormale, TemplateView):
-    template_name = 'core/prenotazioni_utente.html'  # Nome del template da creare
-    paginate_by = 4  # Numero di prenotazioni per pagina
-
+    template_name = 'core/prenotazioni_utente.html' 
+    paginate_by = 5  
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
         user = self.request.user
         utente = Utente.objects.get(user=user)
        
-        now = timezone.now()
+        now = timezone.localtime(timezone.now())
         prenotazioni_vecchie = Prenotazione.objects.filter(
-            utente__user=user,
-            data__lte=now.date(),
+            Q(data__lt=now.date()) |
+            Q(data=now.date(), ora__lt=now.time()),
+            utente__user=user
         ).order_by('data', 'ora')
 
         prenotazioni_future = Prenotazione.objects.filter(
-            utente__user=user,
-            data__gt=now.date()
+            Q(data__gt=now.date()) |
+            Q(data=now.date(), ora__gte=now.time()),
+            utente__user=user
         ).order_by('data', 'ora')
 
-        # Creazione del dizionario per memorizzare l'esistenza della recensione
         prenotazioni_dict = {}
 
         for prenotazione in prenotazioni_vecchie:
-            # Verifichiamo se esiste una recensione per quella prenotazione da parte dell'utente per il campo della prenotazione
             has_recensione = Recensione.objects.filter(utente=utente, campo=prenotazione.campo).exists()
             prenotazioni_dict[prenotazione] = has_recensione
 
@@ -206,15 +219,23 @@ class PrenotazioniUtenteView(UtenteNormale, TemplateView):
         return context
     
 class PrenotazioniStrutturaView(UtenteStruttura, TemplateView):
-    template_name = 'core/prenotazioni_struttura.html'  
-    paginate_by = 7  
+    template_name = 'core/prenotazioni_struttura.html'
+    paginate_by = 7
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         struttura = get_object_or_404(ProprietarioStruttura, user=user).struttura
         prenotazioni = Prenotazione.objects.filter(struttura=struttura).order_by('data', 'ora')
-        paginator = Paginator(prenotazioni, self.paginate_by)
+
+        now = timezone.localtime(timezone.now())
+
+        prenotazioni_dict = {
+            prenotazione: prenotazione.data > now.date() or (prenotazione.data == now.date() and prenotazione.ora >= now.time())
+            for prenotazione in prenotazioni
+        }
+
+        paginator = Paginator(list(prenotazioni_dict.items()), self.paginate_by)
         page = self.request.GET.get('page')
 
         try:
@@ -224,11 +245,11 @@ class PrenotazioniStrutturaView(UtenteStruttura, TemplateView):
         except EmptyPage:
             prenotazioni_paginati = paginator.page(paginator.num_pages)
 
-        context['prenotazioni'] = prenotazioni_paginati
+
+        context['prenotazioni'] = dict(prenotazioni_paginati)
         context['page_obj'] = prenotazioni_paginati
 
         return context
-
 class DetailCampoView(UtenteNormale, ListView):
     model = Recensione
     template_name = "core/visualizza_campo.html"
@@ -258,10 +279,15 @@ class DetailStrutturaView(UtenteNormale, View):
         
         return render(request, self.template_name, {'object': struttura})
    
-class CercaCampoListView(UtenteNormale, ListView):
+class CercaCampoListView(ListView):
     model = Campo
     template_name = 'core/cerca_campo.html'
     context_object_name = 'campi'
+    
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_propStruttura: #accesso negato SOLO SE sei loggato come struttura
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
     
     def get_queryset(self):
         tipo_sport_query = self.request.GET.get('tipo_sport', '')
@@ -296,13 +322,17 @@ class ListaCampiPerStrutturaView(ListView):
 
 #---------------FBV--------------------
 def create_campo(request):
+    if not request.user.is_authenticated or not request.user.is_propStruttura:
+        raise PermissionDenied
+    
     if request.method == 'POST':
+        
         form = CreaCampoForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect(reverse('core:gestisci_campi') + '?created=ok')
         else:
-            print("non valido")
+            return redirect(reverse('core:gestisci_campi') + '?created=no')
     else:
         form = CreaCampoForm(user=request.user)
     return render(request, 'core/crea_campo.html', {'form': form})
@@ -311,15 +341,47 @@ def create_campo(request):
 def elimina_campo(request, pk):
     if request.method == 'POST':
         campo = get_object_or_404(Campo, pk=pk)
+        propStruttura = get_object_or_404(ProprietarioStruttura, struttura=campo.struttura)
+        
+        #si può eliminare un campo solo di cui si è i proprietari
+        if propStruttura.user != request.user:
+            raise PermissionDenied
+        
         campo.delete()
-        return redirect('core:gestisci_campi')  # Redirect alla lista dei campi dopo l'eliminazione
+        
+        return redirect(reverse('core:gestisci_campi') + '?deleted=ok')
 
-    return HttpResponse(status=405)  # Method Not Allowed
+
+    return PermissionDenied
 
 def elimina_prenotazione(request, pk):
     prenotazione = get_object_or_404(Prenotazione, pk=pk)
-    prenotazione.delete()
-    return redirect('core:prenotazioni_utente')  # Redirect alla lista delle prenotazioni dopo l'eliminazione
+    
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    
+    if request.user.is_propStruttura:
+        # il proprietario della struttura della prenotazione che si sta cercando di eliminare
+        # deve essere lo stesso che sta facendo la richiesta
+        propStruttura = get_object_or_404(ProprietarioStruttura, struttura=prenotazione.struttura)
+        if propStruttura.user != request.user:
+            raise PermissionDenied
+        
+        prenotazione.delete()
+        return redirect(reverse('core:prenotazioni_struttura') + '?prenotazionedeleted=ok')
+
+    if request.user.is_utente:
+        utente = prenotazione.utente
+        # l'utente della prenotazione che si sta cercando di eliminare
+        # deve essere lo stesso che sta facendo la richiesta
+        if utente.user != request.user:
+            raise PermissionDenied
+        
+        prenotazione.delete()
+         
+        return redirect(reverse('core:prenotazioni_utente') + '?prenotazionedeleted=ok')
+    
+    return redirect('/')  
 
 
 def home_page(request):
@@ -331,6 +393,12 @@ def home_page(request):
         return redirect('core:cerca_campo')
 
 def ore_libere(request, campo_id, data):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    
+    if request.user.is_propStruttura:
+        raise PermissionDenied
+    
     data_prenotazione = datetime.strptime(data, "%Y-%m-%d").date()
     prenotazioni = Prenotazione.objects.filter(campo_id=campo_id, data=data_prenotazione)
     ore_prenotate = [prenotazione.ora.strftime("%H:%M") for prenotazione in prenotazioni]
@@ -338,9 +406,21 @@ def ore_libere(request, campo_id, data):
     ore_libere = [ora for ora in ore if ora not in ore_prenotate]
     return JsonResponse(ore_libere, safe=False)
 
-
 def salva_recensione(request, prenotazione_id):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    
+    if request.user.is_propStruttura:
+        raise PermissionDenied
+    
     prenotazione = get_object_or_404(Prenotazione, id=prenotazione_id)
+    utente = get_object_or_404(Utente, user=request.user)
+    
+    # se l'utente che fa richiesta di salvataggio recensione
+    # è diverso dall'utente che ha prenotato
+    # allora lancio permission denied
+    if prenotazione.utente != utente:
+        raise PermissionDenied
     
     if request.method == 'POST':
         voto = request.POST.get('voto')
@@ -361,11 +441,16 @@ def salva_recensione(request, prenotazione_id):
                 
                 return redirect(reverse('core:prenotazioni_utente') + '?review=ok')
         except Exception as e:
-            print(e)
             return redirect(reverse('core:prenotazioni_utente') + '?review=no')
     return redirect('core:prenotazioni_utente')
 
 def esporta_prenotazioni(request):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+    
+    if not request.user.is_propStruttura:
+        raise PermissionDenied
+    
     if request.method == 'POST':
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
@@ -377,7 +462,6 @@ def esporta_prenotazioni(request):
             data__range=[start_date, end_date]
         ).order_by('data', 'ora')
 
-        # Creazione del contenuto del file TXT
         lines = []
         for prenotazione in prenotazioni:
             line = f"Data: {prenotazione.data.strftime('%d %B %Y')}, Ora: {prenotazione.ora}, Campo: {prenotazione.campo.get_tipo_sport_display()}, Utente: {prenotazione.utente.user.username}\n"

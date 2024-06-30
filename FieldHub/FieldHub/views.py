@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.contrib.auth import logout
 def home_page(request):
@@ -30,3 +30,8 @@ def home_page(request):
     return redirect(url)
     
 
+def permission_denied_view(request, exception):
+    return render(request, '403.html', status=403)
+
+def resource_not_found_view(request):
+    return render(request, '404.html', status=404)

@@ -257,7 +257,18 @@
 
                                             <div class="row pt-3 justify-content-center">
                                                 <a href="{% url 'users:update_profile' %}" class="btn btn-primary" style="font-weight: bold">Modifica</a>
-                                            </div >                                        
+                                            </div >  
+                                            
+                                            <hr>
+                                            <div class="row pt-3 justify-content-center">
+                                            {% if not proprietario.struttura.verified %}
+                                                <h5 style="text-align: center; color:black"> La tua struttura non è stata verificata! </h5>
+                                                <h5  style="text-align: center; color:black"> Invia un'email a <a href="mailto:{{admin_email}}">admin</a> per richiedere la verifica</h5>
+
+                                            {% else %}
+                                                <h5 style="text-align: center; color:black"> La tua struttura è verificata.</h5>
+                                            {% endif%}
+                                            </div >  
                                         </div>
                                     </div>   
                                 </div>

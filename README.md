@@ -17,8 +17,6 @@ brew install Caskroom/cask/wkhtmltopdf
 
 ## TO DO
 * aggiungere strutture
-* protezione view
-* pagina 404/403
 
 ## OPZIONALI
 * modifica del tasto 'logout' e 'conferma' su visualizza campo

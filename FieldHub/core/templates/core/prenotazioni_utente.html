@@ -4,6 +4,28 @@
 
 {% block content %}
 
+{% if "ok" in request.GET.prenotazionedeleted %}
+<div id="info" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title">Prenotazione eliminata con successo!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Chiudi</button>
+        </div>
+    </div>
+    </div>
+</div> 
+<script>
+    $(document).ready(function(){
+        $("#info").modal('show');
+    });
+</script>
+{% endif %}
 
 {% if "ok" in request.GET.review %}
 <div id="info" class="modal fade" tabindex="-1" role="dialog">
@@ -134,13 +156,36 @@
                                                                 <a class="page-link" href="?page_vecchie={{ prenotazioni_vecchie_page_obj.previous_page_number }}&page_future={{prenotazioni_future_page_obj.number}}">Precedente</a>
                                                             </li>
                                                         {% endif %}
-                                                        <!--
-                                                        {% for num in prenotazioni_vecchie_page_obj.paginator.page_range %}
-                                                            <li class="page-item {% if prenotazioni_vecchie_page_obj.number == num %}active{% endif %}">
-                                                                <a class="page-link" href="?page_vecchie={{ num }}">{{ num }}</a>
+                                                        
+    
+                                                        {% if prenotazioni_vecchie_page_obj.paginator.num_pages > 2 %}
+                                                            <li class="page-item {% if prenotazioni_vecchie_page_obj.number == 1 %}active{% endif %}">
+                                                                <a class="page-link" href="?page_vecchie=1&page_future={{prenotazioni_future_page_obj.number}}">1</a>
                                                             </li>
-                                                        {% endfor %}
-                                                        -->
+                                                        
+                                                            {% if prenotazioni_vecchie_page_obj.number > 2 %}
+                                                                <li class="page-item disabled">
+                                                                    <span class="page-link">...</span>
+                                                                </li>
+                                                            {% endif %}
+                                                        
+                                                            {% if prenotazioni_vecchie_page_obj.number > 1 and prenotazioni_vecchie_page_obj.number < prenotazioni_vecchie_page_obj.paginator.num_pages %}
+                                                                <li class="page-item active">
+                                                                    <a class="page-link" href="?page_vecchie={{ prenotazioni_vecchie_page_obj.number }}&page_future={{prenotazioni_future_page_obj.number}}">{{ prenotazioni_vecchie_page_obj.number }}</a>
+                                                                </li>
+                                                            {% endif %}
+                                                        
+                                                            {% if prenotazioni_vecchie_page_obj.number < prenotazioni_vecchie_page_obj.paginator.num_pages|add:"-1" %}
+                                                                <li class="page-item disabled">
+                                                                    <span class="page-link">...</span>
+                                                                </li>
+                                                            {% endif %}
+                                                        
+                                                            <li class="page-item {% if prenotazioni_vecchie_page_obj.number == prenotazioni_vecchie_page_obj.paginator.num_pages %}active{% endif %}">
+                                                                <a class="page-link" href="?page_vecchie={{ prenotazioni_vecchie_page_obj.paginator.num_pages }}&page_future={{prenotazioni_future_page_obj.number}}">{{ prenotazioni_vecchie_page_obj.paginator.num_pages }}</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        
                                                         {% if prenotazioni_vecchie_page_obj.has_next %}
                                                             
                                                             <li class="page-item">
@@ -206,13 +251,37 @@
                                                                 <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.previous_page_number }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">Precedente</a>
                                                             </li>
                                                         {% endif %}
-                                                        <!--
-                                                        {% for num in prenotazioni_future_page_obj.paginator.page_range %}
-                                                            <li class="page-item {% if prenotazioni_future_page_obj.number == num %}active{% endif %}">
-                                                                <a class="page-link" href="?page_future={{ num }}">{{ num }}</a>
+                                                        
+                                                        {% if prenotazioni_future_page_obj.paginator.num_pages > 2 %}
+                                                        <li class="page-item {% if prenotazioni_future_page_obj.number == 1 %}active{% endif %}">
+                                                            <a class="page-link" href="?page_future=1&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">1</a>
+                                                        </li>
+                                                        
+                                                        {% if prenotazioni_future_page_obj.number > 2 %}
+                                                            <li class="page-item disabled">
+                                                                <span class="page-link">...</span>
                                                             </li>
-                                                        {% endfor %}
-                                                        -->
+                                                        {% endif %}
+                                                        
+                                                        {% if prenotazioni_future_page_obj.number > 1 and prenotazioni_future_page_obj.number < prenotazioni_future_page_obj.paginator.num_pages %}
+                                                            <li class="page-item active">
+                                                                <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.number }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">{{ prenotazioni_future_page_obj.number }}</a>
+                                                            </li>
+                                                        {% endif %}
+                                                        
+                                                        {% if prenotazioni_future_page_obj.number < prenotazioni_future_page_obj.paginator.num_pages|add:"-1" %}
+                                                            <li class="page-item disabled">
+                                                                <span class="page-link">...</span>
+                                                            </li>
+                                                        {% endif %}
+                                                        
+                                                        <li class="page-item {% if prenotazioni_future_page_obj.number == prenotazioni_future_page_obj.paginator.num_pages %}active{% endif %}">
+                                                            <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.paginator.num_pages }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">{{ prenotazioni_future_page_obj.paginator.num_pages }}</a>
+                                                        </li>
+                                                        {% endif %}
+                                                    
+                                                    
+                                                        
                                                         {% if prenotazioni_future_page_obj.has_next %}
                                                             <li class="page-item">
                                                                 <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.next_page_number }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">Successiva</a>

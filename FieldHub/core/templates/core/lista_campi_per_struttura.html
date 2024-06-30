@@ -19,14 +19,91 @@
       -ms-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
     }
+    .img-thumbnail:hover {
+        border-color: #007bff;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+    }
+    </style>
 </style>
+
+{% if "ok" in request.GET.created %}
+<div id="info" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title">Campo creato con successo!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Chiudi</button>
+        </div>
+    </div>
+    </div>
+</div> 
+<script>
+    $(document).ready(function(){
+        $("#info").modal('show');
+    });
+</script>
+{% endif %}
+
+{% if "no" in request.GET.created %}
+    <div id="error-info" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Errore durante la creazione del campo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $("#error-info").modal('show');
+        });
+    </script>
+{% endif %}
+
+
+{% if "ok" in request.GET.deleted %}
+<div id="info" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title">Campo eliminato con successo!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Chiudi</button>
+        </div>
+    </div>
+    </div>
+</div> 
+<script>
+    $(document).ready(function(){
+        $("#info").modal('show');
+    });
+</script>
+{% endif %}
 
 <h1 class="text-center m-4"></h1>
 
     
 <div class="container">
     {% if object_list.count == 0 %}
-        <h2>Nessun campo trovato</h2>
+        <h2>Nessun campo trovato. <a href="{% url 'core:crea_campo' %}" style="color: blue; text-decoration: underline; font-weight: bold;">Crealo qui!</a> </h2>
     {% else %}
         <div class="container mt-5">
             <div class="row justify-content-center">
@@ -41,7 +118,12 @@
                                         </div>
                                         <div class="card-body">
                                             {% for campo in object_list %}
-                                            <div class="row">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <a data-toggle="modal" data-target="#image-modal-{{ campo.id }}">
+                                                        <img src="{{ campo.img.url }}" alt="Campo Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                                    </a>
+                                                </div>
                                                 <div class="col">{{ campo.get_tipo_sport_display }} </div>
                                                 <div class="col">{{ campo.coperto|yesno:"Coperto,Scoperto" }}</div>
                                                 <div class="col">{{ campo.costo }}€</div>
@@ -90,6 +172,22 @@
                                                                         {% csrf_token %}
                                                                         <button type="submit" class="btn btn-danger">Elimina</button>
                                                                     </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Modal di immagine -->
+                                                    <div class="modal fade" id="image-modal-{{ campo.id }}" tabindex="-1" role="dialog" aria-labelledby="image-modal-label-{{ campo.id }}" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="image-modal-label-{{ campo.id }}">{{ campo.get_tipo_sport_display }}</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body text-center">
+                                                                    <img src="{{ campo.img.url }}" alt="Campo Image" class="img-fluid">
                                                                 </div>
                                                             </div>
                                                         </div>
