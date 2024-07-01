@@ -3,10 +3,12 @@ import json, os
 from django.db import transaction, IntegrityError
 import random
 from users.models import ProprietarioStruttura, User, Utente
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.utils import timezone
-from FieldHub.settings import STATIC_URL
-import glob
+from FieldHub.settings import STATICFILES_DIRS
+
+PRENOTAZIONI_PASSATE = 8
+PRENOTAZIONI_FUTURE = 8
 
 def erase_db():
     print("Cancello il DB")
@@ -17,13 +19,14 @@ def erase_db():
     Prenotazione.objects.all().delete()
     Recensione.objects.all().delete()
     image_folder_paths = [
-    'static/img/default_img/profile_pic',
-    'static/img/default_img/field_pic'
+    'img/users_img/profile_pic',
+    'img/users_img/field_pic'
     ]
+    static_abs_path = os.path.abspath(STATICFILES_DIRS[0])
     for folder in image_folder_paths:
-            files = glob.glob(os.path.join(folder, '*'))
-            for f in files:
-                os.remove(f)
+            absolute_path = os.path.join(static_abs_path, folder)
+            for f in os.listdir(absolute_path):
+                os.remove(os.path.join(absolute_path, f))
 
 def init_db():
     
@@ -95,14 +98,11 @@ def init_db():
         else:
             continue
 
-        # Determina il tipo di sport
-        print(Campo.TIPO_SPORT_CHOICES)
         for tipo_sport, _ in Campo.TIPO_SPORT_CHOICES:
             if tipo_sport in nome_file:
                 dict_img[tipo_sport][tipo_copertura].append(nome_file)
                 break
     
-    print(dict_img)
     
     with transaction.atomic(): # assicura che tutte le operazioni del db siano eseguite singolarmente
         for item in data:
@@ -183,7 +183,7 @@ def init_db():
     data_massima = oggi + timedelta(days=giorni_successivi)
     
     for campo in campi:
-        for _ in range(10):  # 10 prenotazioni future per ogni campo
+        for _ in range(PRENOTAZIONI_FUTURE):  # 10 prenotazioni future per ogni campo
             utente = random.choice(utenti)
             data = oggi + timedelta(days=random.randint(1, giorni_successivi))
             ora = random.choice(ore)
@@ -203,7 +203,7 @@ def init_db():
                     data = oggi + timedelta(days=random.randint(1, giorni_successivi))
                     ora = random.choice(ore)
 
-        for _ in range(20):  # 10 prenotazioni vecchie per ogni campo
+        for _ in range(PRENOTAZIONI_PASSATE):  # 10 prenotazioni vecchie per ogni campo
             utente = random.choice(utenti)
             data = oggi - timedelta(days=random.randint(1, giorni_precedenti))
             ora = random.choice(ore)
@@ -245,7 +245,8 @@ def init_db():
         try:
             recensione.save()
         except Exception as e:
-            print(f'Errore creando recensione per la prenotazione {prenotazione}: {e}')
+            pass
+            # print(f'Errore creando recensione per la prenotazione {prenotazione}: {e}')
     
 
     print("DUMP DB")
@@ -261,6 +262,19 @@ def init_db():
         
     for prenotazione in Prenotazione.objects.all():
         print(prenotazione)
+    
+    for recensione in Recensione.objects.all():
+        print(recensione)
+        
+    dbInfo = (
+        f"{Campo.objects.count()} - Campi\n"
+        f"{ProprietarioStruttura.objects.count()} - Proprietari struttura\n"
+        f"{Utente.objects.count()} - Utenti\n"
+        f"{Prenotazione.objects.count()} - Prenotazioni\n"
+        f"{Recensione.objects.count()} - Recensioni"
+    )
+    print("INFO DATABASE")
+    print(dbInfo)
 
             
         

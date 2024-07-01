@@ -66,5 +66,209 @@
             "numTelefono": "+390987654321",
             "citta": "Milano"
         }
+    },
+    {
+        "utente": {
+            "username": "Andrea13",
+            "nome": "Andrea",
+            "cognome": "Russo",
+            "password": "Passw0rd789"
+        },
+        "struttura": {
+            "nome_struttura": "Centro Wellness",
+            "indirizzo": "Via Firenze",
+            "num_civico": 22,
+            "descrizione": "Centro benessere con spa e palestra.",
+            "email": "info@wellness.it",
+            "numTelefono": "+393334455667",
+            "citta": "Roma"
+        }
+    },
+    {
+        "utente": {
+            "username": "Chiara14",
+            "nome": "Chiara",
+            "cognome": "Ferrari",
+            "password": "Str0ngPass"
+        },
+        "struttura": {
+            "nome_struttura": "Sport City",
+            "indirizzo": "Piazza Duomo",
+            "num_civico": 1,
+            "descrizione": "Centro sportivo polifunzionale.",
+            "email": "info@sportcity.com",
+            "numTelefono": "+392223344556",
+            "citta": "Milano"
+        }
+    },
+    {
+        "utente": {
+            "username": "Davide15",
+            "nome": "Davide",
+            "cognome": "Galli",
+            "password": "Dav1dePass"
+        },
+        "struttura": {
+            "nome_struttura": "Arena Sportiva",
+            "indirizzo": "Via Garibaldi",
+            "num_civico": 30,
+            "descrizione": "Arena con campi da basket e pallavolo.",
+            "email": "info@arena.it",
+            "numTelefono": "+390987651234",
+            "citta": "Napoli"
+        }
+    },
+    {
+        "utente": {
+            "username": "Elena16",
+            "nome": "Elena",
+            "cognome": "Bianchi",
+            "password": "Elen4S3cur3"
+        },
+        "struttura": {
+            "nome_struttura": "Gym & More",
+            "indirizzo": "Via San Marco",
+            "num_civico": 45,
+            "descrizione": "Palestra attrezzata con corsi di yoga e pilates.",
+            "email": "info@gymandmore.com",
+            "numTelefono": "+393336778899",
+            "citta": "Roma"
+        }
+    },
+    {
+        "utente": {
+            "username": "Francesco17",
+            "nome": "Francesco",
+            "cognome": "Romano",
+            "password": "Fr4nc3sc0P@ss"
+        },
+        "struttura": {
+            "nome_struttura": "Fitness Factory",
+            "indirizzo": "Via della Pace",
+            "num_civico": 55,
+            "descrizione": "Centro fitness con attrezzature all'avanguardia.",
+            "email": "info@fitnessfactory.com",
+            "numTelefono": "+390112223344",
+            "citta": "Torino"
+        }
+    },
+    {
+        "utente": {
+            "username": "Giulia18",
+            "nome": "Giulia",
+            "cognome": "Rossi",
+            "password": "G1uliaP@ss"
+        },
+        "struttura": {
+            "nome_struttura": "Health Club",
+            "indirizzo": "Via Napoli",
+            "num_civico": 60,
+            "descrizione": "Club con piscina, palestra e centro benessere.",
+            "email": "info@healthclub.it",
+            "numTelefono": "+393332224455",
+            "citta": "Modena"
+        }
+    },
+    {
+        "utente": {
+            "username": "Laura19",
+            "nome": "Laura",
+            "cognome": "Esposito",
+            "password": "L4ur4Pass"
+        },
+        "struttura": {
+            "nome_struttura": "Sport & Health",
+            "indirizzo": "Via dell'Università",
+            "num_civico": 70,
+            "descrizione": "Centro sportivo con varie attività e corsi.",
+            "email": "info@sporthealth.com",
+            "numTelefono": "+393314455667",
+            "citta": "Milano"
+        }
+    },
+    {
+        "utente": {
+            "username": "Marco20",
+            "nome": "Marco",
+            "cognome": "Marini",
+            "password": "M4rc0Pass"
+        },
+        "struttura": {
+            "nome_struttura": "Fitness Zone",
+            "indirizzo": "Corso Venezia",
+            "num_civico": 80,
+            "descrizione": "Zona fitness con attrezzature moderne e corsi di gruppo.",
+            "email": "info@fitnesszone.com",
+            "numTelefono": "+393312223344",
+            "citta": "Roma"
+        }
+    },
+    {
+        "utente": {
+            "username": "Simone21",
+            "nome": "Simone",
+            "cognome": "Conti",
+            "password": "Sim0neP@ss"
+        },
+        "struttura": {
+            "nome_struttura": "Active Gym",
+            "indirizzo": "Via Garibaldi",
+            "num_civico": 90,
+            "descrizione": "Palestra attrezzata con area pesi e corsi di fitness.",
+            "email": "info@activegym.it",
+            "numTelefono": "+393311223344",
+            "citta": "Torino"
+        }
+    },
+    {
+        "utente": {
+            "username": "Valentina22",
+            "nome": "Valentina",
+            "cognome": "De Luca",
+            "password": "V4l3nt1naP@ss"
+        },
+        "struttura": {
+            "nome_struttura": "Wellness Hub",
+            "indirizzo": "Via Napoli",
+            "num_civico": 100,
+            "descrizione": "Hub benessere con palestra, spa e piscina.",
+            "email": "info@wellnesshub.it",
+            "numTelefono": "+393311112223",
+            "citta": "Modena"
+        }
+    },
+    {
+        "utente": {
+            "username": "Alessandro23",
+            "nome": "Alessandro",
+            "cognome": "Greco",
+            "password": "Al3ssandr0P@ss"
+        },
+        "struttura": {
+            "nome_struttura": "Fitness One",
+            "indirizzo": "Via Roma",
+            "num_civico": 110,
+            "descrizione": "Centro fitness con attrezzature moderne.",
+            "email": "info@fitnessone.it",
+            "numTelefono": "+390223344556",
+            "citta": "Milano"
+        }
+    },
+    {
+        "utente": {
+            "username": "Martina24",
+            "nome": "Martina",
+            "cognome": "Galli",
+            "password": "Mart1naP@ss"
+        },
+        "struttura": {
+            "nome_struttura": "Health & Fitness",
+            "indirizzo": "Via Torino",
+            "num_civico": 120,
+            "descrizione": "Centro benessere con palestra e corsi di yoga.",
+            "email": "info@healthfitness.com",
+            "numTelefono": "+393311223344",
+            "citta": "Roma"
+        }
     }
 ]

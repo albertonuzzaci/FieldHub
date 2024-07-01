@@ -33,6 +33,6 @@ urlpatterns = [
     re_path(r'^.*', resource_not_found_view, name='notfound'),
 ]
 
-#
-#erase_db()
-#init_db()
+#à
+erase_db()
+init_db()

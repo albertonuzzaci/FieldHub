@@ -46,6 +46,8 @@ class UtenteStruttura(LoginRequiredMixin):
         return super().dispatch(request, *args, **kwargs)
 #---------------CBV--------------------
 
+from django.db.models import Avg, Q
+
 class ListaCampiView(ListView):
     model = Campo
     template_name = 'core/listacampi.html'
@@ -53,7 +55,7 @@ class ListaCampiView(ListView):
     paginate_by = 6
     
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.is_propStruttura: # accessibile ai non loggati e agli utenti normali / NON accessibile solo alle strutture
+        if request.user.is_authenticated and request.user.is_propStruttura:  # Accessibile ai non loggati e agli utenti normali / NON accessibile solo alle strutture
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
     
@@ -63,15 +65,18 @@ class ListaCampiView(ListView):
     def get_queryset(self):
         tipo_sport = self.request.GET.get('tipo_sport')
         luogo = self.request.GET.get('luogo')
-        ordinamento = self.request.GET.get('ordinamento', 'voto_medio')  # Default to 'voto_medio'
-        ordine = self.request.GET.get('ordine', 'asc')  # Default to 'asc'
+        coperto = self.request.GET.get('coperto') 
+        ordinamento = self.request.GET.get('ordinamento', 'voto_medio')  
+        ordine = self.request.GET.get('ordine', 'asc')  
 
         queryset = Campo.objects.all()
 
         if tipo_sport:
             queryset = queryset.filter(tipo_sport=tipo_sport)
         if luogo:
-            queryset = queryset.filter(struttura__citta__icontains=luogo) # case insensitive
+            queryset = queryset.filter(struttura__citta__icontains=luogo)  # Case insensitive
+        if coperto in ['True', 'False']:
+            queryset = queryset.filter(coperto=(coperto == 'True'))
         
         queryset = queryset.annotate(voto_medio=Avg('recensioni__voto'))
 
@@ -114,10 +119,12 @@ class ListaCampiView(ListView):
 
         context['tipo_sport'] = self.request.GET.get('tipo_sport', '')
         context['luogo'] = self.request.GET.get('luogo', '')
-        context['ordinamento'] = self.request.GET.get('ordinamento', 'voto_medio')  # Default to 'voto_medio'
-        context['ordine'] = self.request.GET.get('ordine', 'asc')  # Default to 'asc'
+        context['ordinamento'] = self.request.GET.get('ordinamento', 'voto_medio')  
+        context['ordine'] = self.request.GET.get('ordine', 'asc')  
+        context['coperto'] = self.request.GET.get('coperto', '')  
         
         return context
+
     
 class PrenotazioneConfermataView(UtenteNormale, TemplateView):
     template_name = 'core/prenotazione_confermata.html'
@@ -250,6 +257,7 @@ class PrenotazioniStrutturaView(UtenteStruttura, TemplateView):
         context['page_obj'] = prenotazioni_paginati
 
         return context
+
 class DetailCampoView(UtenteNormale, ListView):
     model = Recensione
     template_name = "core/visualizza_campo.html"

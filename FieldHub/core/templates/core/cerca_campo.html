@@ -5,59 +5,66 @@
 {% block content %} 
 
 
-    <form method="get" action="{% url 'core:listacampi' %}">
-        <div class="container mt-5" style="display: flex; flex-direction: column; justify-content: center;">
-            <div class="row justify-content-center">
-                <div class="col-md-5">
-                    <section>
-                        <div class="container">
-                            <div class="row">
-                                <div class="mx-auto ">
-                                    <div class="card">
-                                        <div class="card-header text-black text-center">
-                                            <h2>Cerca campi</h2>
+<form method="get" action="{% url 'core:listacampi' %}">
+    <div class="container mt-5" style="display: flex; flex-direction: column; justify-content: center;">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <section>
+                    <div class="container">
+                        <div class="row">
+                            <div class="mx-auto ">
+                                <div class="card">
+                                    <div class="card-header text-black text-center">
+                                        <h2>Cerca campi</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row m-2">
+                                            <div class="col">
+                                                <div class="col">
+                                                    <div class="input-group">
+                                                        <label for="luogo" class="visually-hidden">Luogo:</label>
+                                                        <input type="text" id="luogo" name="luogo" class="form-control" placeholder="Inserisci il luogo..." value="{{ luogo }}">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="card-body">
-                                            <div class="row m-2">
-                                                <div class="col">
-                                                    <div class="col">
-                                                        <div class="input-group">
-                                                            <label for="luogo" class="visually-hidden">Luogo:</label>
-                                                            <input type="text" id="luogo" name="luogo" class="form-control" placeholder="Inserisci il luogo..." value="{{ luogo }}">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                        <div class="row m-2">
+                                            <div class="col">
+                                                <select id="tipo_sport" name="tipo_sport" class="form-select">
+                                                    <option value="">Scegli un tipo di sport</option>
+                                                    {% for tipo_sport, tipo_sport_display in tipi_sport %}
+                                                        <option value="{{ tipo_sport }}" {% if tipo_sport == tipo_sport_query %}selected{% endif %}>{{ tipo_sport_display }}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
-                                            <div class="row m-2">
-                                                <div class="col">
-                                                    <select id="tipo_sport" name="tipo_sport" class="form-select">
-                                                        <option value="">Scegli un tipo di sport</option>
-                                                        {% for tipo_sport, tipo_sport_display in tipi_sport %}
-                                                            <option value="{{ tipo_sport }}" {% if tipo_sport == tipo_sport_query %}selected{% endif %}>{{ tipo_sport_display }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="row m-2">
+                                            <div class="col">
+                                                <select id="coperto" name="coperto" class="form-select">
+                                                    <option value="">Non specificato</option>
+                                                    <option value="True" {% if coperto == 'True' %}selected{% endif %}>Coperto</option>
+                                                    <option value="False" {% if coperto == 'False' %}selected{% endif %}>Scoperto</option>
+                                                </select>
                                             </div>
-                                            <!-- Aggiungi qui i due menu a tendina -->
-                                            <div class="row m-2">
-                                                <div class="col-md-9">
-                                                    <select id="ordinamento" name="ordinamento" class="form-select">
-                                                        <option value="voto_medio" {% if ordinamento == 'voto_medio' %}selected{% endif %}>Recensioni</option>
-                                                        <option value="costo" {% if ordinamento == 'costo' %}selected{% endif %}>Costo</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <select id="ordine" name="ordine" class="form-select">
-                                                        <option value="desc" {% if ordine == 'desc' %}selected{% endif %}>▼</option>
-                                                        <option value="asc" {% if ordine == 'asc' %}selected{% endif %}>▲</option>
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="row m-2">
+                                            <div class="col-md-9">
+                                                <select id="ordinamento" name="ordinamento" class="form-select">
+                                                    <option value="voto_medio" {% if ordinamento == 'voto_medio' %}selected{% endif %}>Recensioni</option>
+                                                    <option value="costo" {% if ordinamento == 'costo' %}selected{% endif %}>Costo</option>
+                                                </select>
                                             </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="col-md-12 d-flex justify-content-center">
-                                                        <button type="submit" class="btn btn-primary">Cerca</button>
-                                                    </div>
+                                            <div class="col-md-3">
+                                                <select id="ordine" name="ordine" class="form-select">
+                                                    <option value="desc" {% if ordine == 'desc' %}selected{% endif %}>▼</option>
+                                                    <option value="asc" {% if ordine == 'asc' %}selected{% endif %}>▲</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="col-md-12 d-flex justify-content-center">
+                                                    <button type="submit" class="btn btn-primary">Cerca</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -65,11 +72,13 @@
                                 </div>
                             </div>
                         </div>
-                    </section>
-                </div>
+                    </div>
+                </section>
             </div>
         </div>
-    </form>
+    </div>
+</form>
+
     
 
 
