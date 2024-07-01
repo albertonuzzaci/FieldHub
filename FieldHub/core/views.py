@@ -1,6 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.crypto import get_random_string
 from django.db.models import Q
 
 from django.views.generic.list import ListView
@@ -10,7 +8,6 @@ from django.urls import reverse
 from django.db.models import Avg
 
 
-from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
@@ -36,6 +33,7 @@ class UtenteNormale(LoginRequiredMixin):
         return super().dispatch(request, *args, **kwargs)
 
 class UtenteStruttura(LoginRequiredMixin):
+    
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return self.handle_no_permission()

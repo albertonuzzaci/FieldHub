@@ -10,13 +10,13 @@
                         <h2 class="card-title">Chi siamo</h2>
                         <p id="info" class="card-text">{{ struttura.descrizione }}</p>
                         <h4 class="card-title">Altri nostri campi</h4>
-                        <ul>
+                        <p>
                             {% for campo in struttura.campo_set.all %}
                                 {% if campo.id != object.id %}
                                     <a href="{% url 'core:visualizza_campo' campo.id  %}"> <p id="info" > {{ campo.get_tipo_sport_display }} - {{ campo.coperto|yesno:"Coperto,Scoperto" }} - {{ campo.costo }}€ </p></a>
                                 {% endif %}
                             {% endfor %}
-                        </ul>
+                        </p>
                     </div>
                 </div>
             </div>

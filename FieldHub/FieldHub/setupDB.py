@@ -24,9 +24,11 @@ def erase_db():
     ]
     static_abs_path = os.path.abspath(STATICFILES_DIRS[0])
     for folder in image_folder_paths:
-            absolute_path = os.path.join(static_abs_path, folder)
-            for f in os.listdir(absolute_path):
-                os.remove(os.path.join(absolute_path, f))
+        absolute_path = os.path.join(static_abs_path, folder)
+        for f in os.listdir(absolute_path):
+            file_path = os.path.join(absolute_path, f)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
 
 def init_db():
     
