@@ -9,8 +9,8 @@ from django.db.utils import IntegrityError
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 
-# Create your tests here.
-class PrenotazioneModelTest(TestCase):
+#----------------MODEL TEST---------------- 6 TEST
+class PrenotazioneModelTest(TestCase):      # 3 test
 
     def setUp(self):
         '''
@@ -96,8 +96,33 @@ class PrenotazioneModelTest(TestCase):
                 ora=self.ora,
                 struttura=self.struttura
             )
+    
+    def test_only_oclock_between_10_21(self):
+        '''
+        Ogni prenotazione può essere fatta solo in ore 'intere' dalle 10:00 alle 21:00 comprese. 
+        '''
+        self.data= timezone.now().date() + timedelta(days=3)
+        self.ora = '16:35'
+        with self.assertRaises(ValueError):
+            Prenotazione.objects.create(
+                utente=self.propStruttura,
+                campo=self.campo,
+                data=self.data,
+                ora=self.ora,
+                struttura=self.struttura
+            )
+            
+        self.ora = '22:00'
+        with self.assertRaises(ValueError):
+            Prenotazione.objects.create(
+                utente=self.propStruttura,
+                campo=self.campo,
+                data=self.data,
+                ora=self.ora,
+                struttura=self.struttura
+            )
 
-class RecensioneModelTest(TestCase):
+class RecensioneModelTest(TestCase):        # 3 test
 
     def setUp(self):
         '''
@@ -243,7 +268,8 @@ class RecensioneModelTest(TestCase):
                 prenotazione=self.prenotazione_passata
             )
 
-class EliminaPrenotazioneViewTest(TestCase):
+#----------------VIEW TEST----------------  6 TEST
+class EliminaPrenotazioneViewTest(TestCase):# 1 test
 
     def setUp(self):
         # CREAZIONE DUE UTENTI
@@ -321,7 +347,7 @@ class EliminaPrenotazioneViewTest(TestCase):
         response = self.client.post(reverse('core:elimina_prenotazione', args=[self.prenotazione.pk]))
         self.assertEqual(response.status_code, 403)
 
-class PrenotazioniUtenteViewTest(TestCase):
+class PrenotazioniUtenteViewTest(TestCase): # 3 test
 
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass', is_utente=True)
@@ -345,9 +371,8 @@ class PrenotazioniUtenteViewTest(TestCase):
         )
 
         now = timezone.now().date()
-        ora_passata = timezone.now().time().replace(hour=9, minute=0, second=0)
+        ora_passata = '15:00'
 
-        # Crea prenotazioni vecchie
         for i in range(20):
             Prenotazione.objects.create(
                 utente=self.utente,
@@ -381,11 +406,51 @@ class PrenotazioniUtenteViewTest(TestCase):
 
         self.assertContains(response, 'Nessuna prenotazione da recensire')
         self.assertContains(response, 'Nessuna prenotazione futura')
+    
+    def test_review_button_disabled_for_reviewed_booking(self):
+        '''
+        Verifica che il tasto per recensire una prenotazione già recensita sia disabilitato
+        '''
+        self.client.login(username='testuser', password='testpass')
+        
+        self.data_passata = timezone.now().date() + timedelta(days=-1)
+        prenotazione = Prenotazione.objects.create(
+            utente=self.utente,
+            campo=self.campo,
+            data= self.data_passata,
+            ora='10:00',
+            struttura=self.struttura
+        )
+        
+        Recensione.objects.create(
+            data_recensione=timezone.now().date(),
+            utente=self.utente,
+            campo=self.campo,
+            struttura=self.struttura,
+            testo='Buono',
+            voto=4,
+            data_prenotazione=prenotazione.data,
+            prenotazione=prenotazione
+        )
+        
+        response = self.client.get(reverse('core:prenotazioni_utente'))
+        self.assertContains(response, 'disabled-btn')
 
-class OreLibereTest(TestCase):
+class OreLibereTest(TestCase):               # 2 test
     def setUp(self):
-        self.user = User.objects.create(username='testuser', password='testpass', is_utente=True)
-        self.utente = Utente.objects.create(user=self.user, email='utente@test.com', numTelefono='123456789')
+        self.user_utente = User.objects.create_user(
+            username='testutente',
+            password='testpass',
+            first_name='nome',
+            last_name='cognome',
+            is_utente=True
+        )
+
+        self.utente = Utente.objects.create(
+            user=self.user_utente,
+            email='utente@test.com', 
+            numTelefono='123456789'
+        )
 
         self.struttura = Struttura.objects.create(
             nome_struttura='Centro Sportivo',
@@ -408,12 +473,43 @@ class OreLibereTest(TestCase):
         '''
         Controllo che in un giorno senza prenotazioni mi vengano ritornate tutte le ore
         '''
-        self.client.login(username='testuser', password='testpass')
+        self.client.login(username='testutente', password='testpass')
         data = timezone.now().date().strftime("%Y-%m-%d")
         response = self.client.get(reverse('core:ore_libere', args=[self.campo.id, data]))
         
         self.assertEqual(response.status_code, 200)
         ore_libere = response.json()
         ore_attese = [f'{hour}:00' for hour in range(10, 22)]
+        
+        self.assertEqual(ore_libere, ore_attese)
+    
+    def test_ore_libere_con_prenotazioni(self):
+        '''
+        Controllo che in un giorno con tre prenotazioni vengano escluse le ore prenotate
+        '''
+        self.client.login(username='testutente', password='testpass')
+        data = timezone.now().date()
+        
+        ore_prenotazioni_oggi = [10, 18, 15]
+
+        
+        for ora in ore_prenotazioni_oggi:
+            Prenotazione.objects.create(
+                campo=self.campo,
+                struttura=self.campo.struttura,
+                utente=self.utente,
+                data=data,
+                ora=f'{ora}:00'
+            )
+
+        
+        data = timezone.now().date().strftime("%Y-%m-%d")
+        response = self.client.get(reverse('core:ore_libere', args=[self.campo.id, data]))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+        
+        ore_libere = response.json()
+        ore_attese = [f'{hour}:00' for hour in range(10, 22) if hour not in ore_prenotazioni_oggi]
         
         self.assertEqual(ore_libere, ore_attese)

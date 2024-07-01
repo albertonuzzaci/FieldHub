@@ -272,11 +272,13 @@ class DetailCampoView(UtenteNormale, ListView):
         return context
 
 
-def visualizza_struttura(request, struttura_id):
-    if request.user.is_authenticated and request.user.is_utente:
-            raise PermissionDenied
-    struttura = get_object_or_404(Struttura, pk=struttura_id)
-    return render(request, "core/visualizza_struttura.html", {'object': struttura})
+class DetailStrutturaView(UtenteNormale, View):
+    template_name = "core/visualizza_struttura.html"
+    
+    def get(self, request, pk):
+        struttura = get_object_or_404(Struttura, pk=pk)
+        
+        return render(request, self.template_name, {'object': struttura})
    
 class CercaCampoListView(ListView):
     model = Campo

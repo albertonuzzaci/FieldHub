@@ -1,7 +1,6 @@
 from django.db import models
-from django.core.validators import RegexValidator
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from datetime import datetime, time
 class Struttura(models.Model):
     nome_struttura = models.CharField(max_length=255)
     citta = models.CharField(max_length=100)
@@ -11,8 +10,7 @@ class Struttura(models.Model):
     email = models.CharField(max_length=150)
     verified = models.BooleanField(default=False)
 
-    numTelefono = models.CharField(max_length=20
-    )
+    numTelefono = models.CharField(max_length=20)
    
     def __str__(self):
         return self.nome_struttura
@@ -79,8 +77,18 @@ class Prenotazione(models.Model):
         unique_together = ('campo', 'data', 'ora') 
         
     def save(self, *args, **kwargs):
+
+        if len(str(self.ora)) > 5:
+            raise ValueError("L'ora deve essere nel formato %H:%M ")
+
+        ora, minuti = self.ora.split(':')
+        
         if not self.utente.user.is_utente:
             raise ValueError("L'utente deve essere verificato come utente per scrivere una recensione.")
+        if int(minuti) != 0:
+            raise ValueError("L'ora deve essere un'ora intera con minuti pari a 0.")
+        if int(ora) < 10 or int(ora) > 21:
+            raise ValueError("L'ora deve essere tra le 10 e le 21 comprese.")
         super().save(*args, **kwargs)
         
         
