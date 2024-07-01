@@ -5,11 +5,41 @@ Table users {
   id integer [primary key]
   username varchar
   password_hash varchar
-  tipo_utente varchar [note: 'utente o admin']
+  is_propStruttura boolean
+  is_utente boolean
   nome varchar
+  cognome varchar
+  img varchar
+}
+
+Table utenti {
+  id integer [primary key]
+  id_user integer
   email varchar
-  telefono varchar
-  data_nascita datetime
+  numTelefono varchar
+}
+
+Table propStruttura {
+  id integer [primary key]
+  id_user integer
+  id_struttura integer
+}
+
+Table strutture {
+  id integer [primary key]
+  nome_struttura varchar
+  citta varchar
+  indirizzo varchar
+  num_civico integer
+  descrizione text
+  email varchar
+  verified boolean
+  numTelefono varchar
+}
+
+Table servizi {
+  id integer [primary key]
+  nome varchar [unique]
 }
 
 Table campi {
@@ -17,40 +47,38 @@ Table campi {
   tipo_sport varchar [note: 'tennis, calcio a 5, calcio a 7, padel, beach volley, ecc.']
   coperto boolean
   costo decimal
-  servizi text [note: 'spogliatoi, docce, ecc.']
   id_struttura integer
-}
-
-Table strutture {
-  id integer [primary key]
-  nome_struttura varchar
-  id_utente integer
-  indirizzo varchar
-  descrizione text
-  contatti varchar
+  img varchar
 }
 
 Table prenotazioni {
   id integer [primary key]
   id_utente integer
   id_campo integer
-  data_prenotazione timestamp
-  stato varchar
-  confermata boolean
+  data date
+  ora time
 }
 
 Table recensioni {
   id integer [primary key]
   id_utente integer
   id_campo integer
-  testo_recensione text
+  id_struttura integer
+  id_prenotazione integer
+  testo text
   voto integer [note: 'da 1 a 5']
-  data_recensione timestamp
+  data_recensione date
+  data_prenotazione date
 }
 
+Ref: utenti.id_user > users.id // one-to-one
+Ref: propStruttura.id_user > users.id // one-to-one
+Ref: propStruttura.id_struttura > strutture.id // one-to-one
 Ref: campi.id_struttura > strutture.id // many-to-one
-Ref: strutture.id_utente > users.id // many-to-one
-Ref: prenotazioni.id_utente > users.id // many-to-one
+Ref: servizi.id > campi.id // many-to-many
+Ref: prenotazioni.id_utente > utenti.id // many-to-one
 Ref: prenotazioni.id_campo > campi.id // many-to-one
-Ref: recensioni.id_utente > users.id // many-to-one
+Ref: recensioni.id_utente > utenti.id // many-to-one
 Ref: recensioni.id_campo > campi.id // many-to-one
+Ref: recensioni.id_struttura > strutture.id // many-to-one
+Ref: recensioni.id_prenotazione > prenotazioni.id // many-to-one

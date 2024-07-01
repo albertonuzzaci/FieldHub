@@ -12,12 +12,3 @@ pipenv shell
 ```
 
 
-brew install Caskroom/cask/wkhtmltopdf
-
-
-## TO DO
-* aggiungere strutture
-
-## OPZIONALI
-* modifica del tasto 'logout' e 'conferma' su visualizza campo
-* valutazione struttura
