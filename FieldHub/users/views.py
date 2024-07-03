@@ -29,8 +29,8 @@ def propStrutturaUpdateView(request):
     struttura = get_object_or_404(ProprietarioStruttura, user=request.user).struttura
     
     initial_data = {
-        'init_nome': request.user.nome,
-        'init_cognome': request.user.cognome,
+        'init_nome': request.user.first_name,
+        'init_cognome': request.user.last_name,
         'init_nome_struttura': struttura.nome_struttura,
         'init_citta': struttura.citta,
         'init_indirizzo': struttura.indirizzo,
@@ -80,8 +80,8 @@ def utenteUpdateView(request):
     
     utente = get_object_or_404(Utente, user=request.user)
     inital_data = {
-        'init_nome': request.user.nome,
-        'init_cognome': request.user.cognome,
+        'init_nome': request.user.first_name,
+        'init_cognome': request.user.last_name,
         'init_email': utente.email,
         'init_numTelefono': utente.numTelefono
     }
@@ -128,7 +128,7 @@ class UtenteRegistrationView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('/')
+        return redirect('/core/cercacampo/?registration=ok')
 
 class PropStrutturaRegistrationView(CreateView):
     model = User
@@ -143,28 +143,32 @@ class PropStrutturaRegistrationView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('/')
+        return redirect('/core/gestiscicampi/?registration=ok')
 
 def login_request(request):
     if request.user.is_authenticated:
-            raise PermissionDenied
+        raise PermissionDenied
         
-    if request.method=='POST':
+    next_url = request.GET.get('next') or request.POST.get('next') or '/?login=ok'
+
+    if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
-            if user is not None :
-                login(request,user)
-                return redirect('/?login=ok')
-            else:
-                messages.error(request,"Username o password sbagliati.")
-        else:
-                messages.error(request,"Username o password sbagliati.")
-    return render(request, 'users/login.html',
-    context={'form':AuthenticationForm()})
+            if user is not None:
+                login(request, user)
+                if next_url:
+                    return redirect(next_url)
 
+                    #return redirect('/?login=ok')
+            else:
+                messages.error(request, "Username o password sbagliati.")
+        else:
+            messages.error(request, "Username o password sbagliati.")
+    
+    return render(request, 'users/login.html', context={'form': AuthenticationForm(), 'next': next_url})
 @login_required
 def logout_view(request):
     logout(request)

@@ -1,0 +1,38 @@
+<div class="container container-review mb-5" style="max-width: 1010px;">
+    <div class="row">
+        <div class="col-md-2" style="padding: 30px;  border-right: 3px outset #6d86bd">
+            <div class="row ">
+                <h5 style="text-align:center; color:white" > {{recensione.utente.user.username}} </h5>
+            </div>
+            <div class="row align-center-elements">
+                <div class="image-container">
+                    <img src="{{recensione.utente.user.img.url}}">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10 different-col" style="padding: 30px; color: black; font-weight: 100%; border-top-right-radius: 20px;border-bottom-right-radius: 20px; ">
+            <div class="row">
+                <h5 style="color: black"> {{ recensione.data_recensione }} </h5>
+            </div>
+            <div class="row">
+                <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+                    <div class="ratings">
+                        {% for star in "12345" %}
+                            {% if forloop.counter <= recensione.voto %}
+                                
+                                <i class="fa fa-star rating-color"></i>
+                            {% else %}
+                            
+                                <i class="fa fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <p> {{recensione.testo}} </p>
+            </div>
+        </div>
+    </div>
+</div>

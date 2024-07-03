@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.nome_struttura }}{% endblock %}
+{% block head %}
+
+{% endblock%}
+
+{% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .rating-color{
+            color:#fbc634 !important;
+        }
+        .ratings i{
+            font-size: 24px;
+        }
+        .image-container {
+            width: 100px;
+            height: 100px;
+            border: solid;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .image-container img {
+            width: 150px; /* Maggiore rispetto al container per ottenere lo zoom */
+            height: auto;
+        }
+        .align-center-elements{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container-review{
+            background: #142d4c;
+            color:white;
+            border-radius: 25px;
+            border: 3px outset #6d86bd;
+        }
+
+        .different-col{
+            background: #aecef5;
+        }
+
+        .custom-container-paginator {
+            border: 2px solid #d3d3d3; 
+            border-radius: 8px; 
+            background-color: #f0f0f0; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            padding: 5px; 
+            background-color: white;
+            margin-bottom: 32px;
+        }
+
+    </style>
+    {% if recensioni.count > 0 %}
+        <h2 class="mb-3"style="color:black; text-align:center"> Recensioni </h2>
+        {% for recensione in recensioni %}
+            {% include "core/recensione.html" with recensione=recensione %}
+
+        
+        {% endfor %}
+    {% else %}
+        <h2 class="mb-3"style="color:black; text-align:center"> Nessuna recensione disponibile. </h2>
+
+    {% endif %}
+    <div class="container custom-container-paginator" style="text-align:center">
+        <b>
+        <div class="row">
+            <div class="col">
+                <div class="n_text"> {{ page_obj.paginator.count }} risultati trovati</div> 
+            </div>
+            <div class="col">
+                <div>Pagina {{ page_obj.number }} </div>
+            </div>
+            <div class="col">
+                {% if page_obj.has_previous %}
+                    <a class="text-decoration-underline" style="color:blue" href="?page={{ page_obj.previous_page_number }}#recensioni-id">Precedente</a>
+                {% endif %}
+                
+                {% if page_obj.has_next %}
+                    <a class="text-decoration-underline" style="color:blue" href="?page={{ page_obj.next_page_number }}#recensioni-id">Successiva</a>
+                {% endif %}
+            </div>
+        </div>
+    </b>
+    </div>
+        
+   
+
+{% endblock %}

@@ -16,6 +16,7 @@
           </div>
           <div class="card-body">
             <form action="{% url 'users:login' %}" method="POST" novalidate>
+              <input type="hidden" name="next" value="{{ next }}">
               <div class = "row">
                 {% csrf_token %}
                    {% for field in form.visible_fields %}

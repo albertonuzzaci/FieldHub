@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
+from django.db.models.functions import Round
 
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
@@ -25,7 +26,7 @@ from datetime import datetime
 class UtenteNormale(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return self.handle_no_permission()
+            return super().dispatch(request, *args, **kwargs)
         
         if request.user.is_propStruttura:
             raise PermissionDenied
@@ -36,15 +37,13 @@ class UtenteStruttura(LoginRequiredMixin):
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return self.handle_no_permission()
+            return super().dispatch(request, *args, **kwargs)
         
         if request.user.is_utente:
             raise PermissionDenied
         
         return super().dispatch(request, *args, **kwargs)
 #---------------CBV--------------------
-
-from django.db.models import Avg, Q
 
 class ListaCampiView(ListView):
     model = Campo
@@ -77,12 +76,18 @@ class ListaCampiView(ListView):
             queryset = queryset.filter(coperto=(coperto == 'True'))
         
         queryset = queryset.annotate(voto_medio=Avg('recensioni__voto'))
-
-        if ordinamento:
-            if ordine == 'asc':
-                queryset = queryset.order_by(ordinamento)
-            elif ordine == 'desc':
-                queryset = queryset.order_by(f'-{ordinamento}')
+        print(ordinamento)
+        try:
+            if ordinamento:
+                if ordine == 'asc':
+                    queryset = queryset.order_by(ordinamento)
+                elif ordine == 'desc':
+                    queryset = queryset.order_by(f'-{ordinamento}')
+                else:
+                    queryset = queryset.order_by('-voto_medio')
+                    
+        except:
+            queryset = queryset.order_by('-voto_medio')
         
         return queryset
     
@@ -277,7 +282,6 @@ class DetailCampoView(UtenteNormale, ListView):
         context['voto_medio'] = voto_medio
         return context
 
-
 class DetailStrutturaView(UtenteNormale, View):
     template_name = "core/visualizza_struttura.html"
     
@@ -320,12 +324,45 @@ class ListaCampiPerStrutturaView(ListView):
             return Campo.objects.none() 
 
         self.struttura = get_object_or_404(ProprietarioStruttura, user=user).struttura
-        return Campo.objects.filter(struttura=self.struttura)
+        queryset = Campo.objects.filter(struttura=self.struttura).annotate(voto_medio=Round(Avg('recensioni__voto'), 1))
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['struttura'] = self.struttura
+        context['object_list'] = [
+            {
+                'campo': campo,
+                'voto_medio': campo.voto_medio
+            } for campo in context['object_list']
+        ]
         return context
+
+class RecensioniCampoView(ListView):
+    model = Recensione
+    template_name = 'core/recensioni_campo.html'  # Specifica il tuo template
+    context_object_name = 'recensioni'
+    paginate_by = 5
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.is_propStruttura:
+            raise PermissionDenied
+        
+        campo_id = self.kwargs['campo_id']
+        campo = get_object_or_404(Campo, id=campo_id)
+        
+        struttura_utente = get_object_or_404(ProprietarioStruttura, user=request.user).struttura
+
+        if campo.struttura != struttura_utente:
+            raise PermissionDenied
+        
+        self.campo = campo
+        
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return Recensione.objects.filter(campo=self.campo).order_by('-data_recensione')
+    
 
 #---------------FBV--------------------
 def create_campo(request):

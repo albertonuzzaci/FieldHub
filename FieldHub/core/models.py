@@ -16,7 +16,7 @@ class Struttura(models.Model):
         return self.nome_struttura
 
     class Meta:
-        verbose_name_plural = "strutture"
+        verbose_name_plural = "Strutture"
         
 class Servizio(models.Model):
     SERVIZIO_CHOICES = [
@@ -35,6 +35,8 @@ class Servizio(models.Model):
 
     def __str__(self):
         return self.get_nome_display()
+    class Meta:
+        verbose_name_plural = "Servizi"
     
 class Campo(models.Model):
     TIPO_SPORT_CHOICES = [
@@ -59,7 +61,7 @@ class Campo(models.Model):
         return f'{self.tipo_sport} - {copertura} - {self.costo}€ - Servizi: {servizi_list}'
     
     class Meta:
-        verbose_name_plural = "campi"
+        verbose_name_plural = "Campi"
 
 class Prenotazione(models.Model):
     utente = models.ForeignKey('users.Utente', on_delete=models.CASCADE)
@@ -73,7 +75,7 @@ class Prenotazione(models.Model):
         return f'{self.utente} - {self.campo} - {self.data} {self.ora}'
     
     class Meta:
-        verbose_name_plural = "prenotazioni"
+        verbose_name_plural = "Prenotazioni"
         unique_together = ('campo', 'data', 'ora') 
         
     def save(self, *args, **kwargs):
@@ -84,13 +86,14 @@ class Prenotazione(models.Model):
         ora, minuti = self.ora.split(':')
         
         if not self.utente.user.is_utente:
-            raise ValueError("L'utente deve essere verificato come utente per scrivere una recensione.")
+            raise ValueError("L'utente deve essere verificato come utente per prenotare.")
         if int(minuti) != 0:
             raise ValueError("L'ora deve essere un'ora intera con minuti pari a 0.")
         if int(ora) < 10 or int(ora) > 21:
             raise ValueError("L'ora deve essere tra le 10 e le 21 comprese.")
         super().save(*args, **kwargs)
-        
+    
+    
         
 class Recensione(models.Model):
     data_recensione = models.DateField()
@@ -100,10 +103,11 @@ class Recensione(models.Model):
     testo = models.TextField()
     voto = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     data_prenotazione = models.DateField()
-    prenotazione = models.ForeignKey('Prenotazione', on_delete=models.CASCADE, related_name='recensioni')
+    prenotazione = models.OneToOneField('Prenotazione', on_delete=models.CASCADE, related_name='recensione')
 
 
     class Meta:
+        verbose_name_plural = "Recensioni"
         unique_together = ('utente', 'campo')
 
     def save(self, *args, **kwargs):

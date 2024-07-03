@@ -59,8 +59,8 @@ def init_db():
             user, _ = User.objects.get_or_create(
                 username=tmpUtente['username'],
                 defaults={
-                    'nome': tmpUtente['nome'],
-                    'cognome': tmpUtente['cognome'],
+                    'first_name': tmpUtente['nome'],
+                    'last_name': tmpUtente['cognome'],
                     'is_propStruttura': True,
                     'is_utente': False
                 }
@@ -154,8 +154,8 @@ def init_db():
             user, created = User.objects.get_or_create(
                 username=item['username'],
                 defaults={
-                    'nome': item['nome'],
-                    'cognome': item['cognome'],
+                    'first_name': item['nome'],
+                    'last_name': item['cognome'],
                     'is_propStruttura': False,
                     'is_utente': True
                 }

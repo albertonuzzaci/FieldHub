@@ -21,8 +21,8 @@ class UtenteSignUpForm(UserCreationForm):
         #-----
         user = super().save(commit=False) 
         user.is_utente = True
-        user.nome = self.cleaned_data.get('nome')
-        user.cognome = self.cleaned_data.get('cognome')
+        user.first_name = self.cleaned_data.get('nome')
+        user.last_name = self.cleaned_data.get('cognome')
         user.save()
         #-----
         utente = Utente.objects.create(
@@ -57,8 +57,8 @@ class ProprietarioStrutturaSignUpForm(UserCreationForm):
         user = super().save(commit=False) 
         # prima di salvare user nel DB voglio prima salvare le informazioni sotto (nome, cognome, isprop) 
         user.is_propStruttura = True
-        user.nome = self.cleaned_data.get('nome')
-        user.cognome = self.cleaned_data.get('cognome')
+        user.first_name = self.cleaned_data.get('nome')
+        user.last_name = self.cleaned_data.get('cognome')
         user.save()
         #-----
         struttura = Struttura.objects.create(
@@ -82,16 +82,16 @@ class ProprietarioStrutturaSignUpForm(UserCreationForm):
         return user
     
 class UpdateUserForm(forms.ModelForm):
-    nome = forms.CharField(required=True,
+    first_name = forms.CharField(required=True,
                              widget=forms.TextInput(attrs={'class': 'form-control'}))
-    cognome = forms.CharField(
+    last_name = forms.CharField(
                                required=True,
                                widget=forms.TextInput(attrs={'class': 'form-control'}))
     img = forms.ImageField(required=True, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = User
-        fields = ['nome','cognome','img']
+        fields = ['first_name','last_name','img']
     
 class UpdateUtenteForm(forms.ModelForm):
     email = forms.CharField(required=True,

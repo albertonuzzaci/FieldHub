@@ -24,9 +24,43 @@
         cursor: pointer;
         transition: border-color 0.3s ease;
     }
-    </style>
+    .rating-color{
+        color:#f5d105 !important;
+    }
+    .ratings i{
+        font-size: 24px;
+    }
+
 </style>
 
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+
+
+{% if "ok" in request.GET.registration %}
+<div id="info" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title">Benvenuto {{request.user.username}}!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Chiudi</button>
+        </div>
+    </div>
+    </div>
+</div> 
+<script>
+    $(document).ready(function(){
+        $("#info").modal('show');
+    });
+</script>
+{% endif %}
 {% if "ok" in request.GET.created %}
 <div id="info" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -102,7 +136,7 @@
 
     
 <div class="container">
-    {% if object_list.count == 0 %}
+    {% if object_list|length == 0 %}
         <h2>Nessun campo trovato. <a href="{% url 'core:crea_campo' %}" style="color: blue; text-decoration: underline; font-weight: bold;">Crealo qui!</a> </h2>
     {% else %}
         <div class="container mt-5">
@@ -117,33 +151,38 @@
                                             <h2>Campi di {{ struttura.nome_struttura }}</h2>
                                         </div>
                                         <div class="card-body">
-                                            {% for campo in object_list %}
+                                            {% for item in object_list %}
                                             <div class="row align-items-center">
                                                 <div class="col-auto">
-                                                    <a data-toggle="modal" data-target="#image-modal-{{ campo.id }}">
-                                                        <img src="{{ campo.img.url }}" alt="Campo Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                                    <a data-toggle="modal" data-target="#image-modal-{{ item.campo.id }}">
+                                                        <img src="{{ item.campo.img.url }}" alt="Campo Image" class="img-thumbnail" style="width: 100px; height: 100px;">
                                                     </a>
                                                 </div>
-                                                <div class="col">{{ campo.get_tipo_sport_display }} </div>
-                                                <div class="col">{{ campo.coperto|yesno:"Coperto,Scoperto" }}</div>
-                                                <div class="col">{{ campo.costo }}€</div>
-                                                <div class="col">{{ campo.servizi.all|join:", " }}</div>
+                                                <div class="col">{{ item.campo.get_tipo_sport_display }} </div>
+                                                <div class="col">{{ item.campo.coperto|yesno:"Coperto,Scoperto" }}</div>
+                                                <div class="col">{{ item.campo.costo }}€</div>
+                                                <div class="col">{{ item.campo.servizi.all|join:", " }}</div>
+                                                
+                                                <div class="col ratings">
+                                                    <a href="/core/recensioni/{{ item.campo.id }}/"></a>
+                                                    <b style="font-size: 20px"><a href="{% url 'core:recensioni-campo' item.campo.id %}">{{ item.voto_medio|default:"-" }}</a></b><i class="fa fa-star rating-color"></i>
+                                                </div>
                                                 <div class="col little-container">
                                                     <!-- Bottone per aprire il modal di conferma -->
-                                                    <button type="button" class="btn btn-outline-danger custom-center" data-toggle="modal" data-target="#modal-elimina-{{ campo.id }}">
+                                                    <button type="button" class="btn btn-outline-danger custom-center" data-toggle="modal" data-target="#modal-elimina-{{ item.campo.id }}">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash">
                                                             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"></path>
-                                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"></path>
+                                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"></path>
                                                         </svg>
                                                         Elimina
                                                     </button>
                                 
                                                     <!-- Modal di conferma eliminazione -->
-                                                    <div class="modal fade" id="modal-elimina-{{ campo.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-elimina-{{ campo.id }}-label" aria-hidden="true">
+                                                    <div class="modal fade" id="modal-elimina-{{ item.campo.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-elimina-{{ item.campo.id }}-label" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="modal-elimina-{{ campo.id }}-label">Conferma eliminazione</h5>
+                                                                    <h5 class="modal-title" id="modal-elimina-{{ item.campo.id }}-label">Conferma eliminazione</h5>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
@@ -153,22 +192,22 @@
                                                                     Sei sicuro di voler eliminare il campo con queste caratteristiche?
                                                                     </ul>
                                                                     <ul style="weight: bold"> 
-                                                                        {{ campo.get_tipo_sport_display }} 
+                                                                        {{ item.campo.get_tipo_sport_display }} 
                                                                     </ul>
                                                                     <ul> 
-                                                                        {{ campo.coperto|yesno:"Coperto,Scoperto" }}
+                                                                        {{ item.campo.coperto|yesno:"Coperto,Scoperto" }}
                                                                     </ul>
                                                                     <ul> 
-                                                                        {{ campo.costo }}€
+                                                                        {{ item.campo.costo }}€
                                                                     </ul>
                                                                     <ul> 
-                                                                        {{ campo.servizi.all|join:", " }}
+                                                                        {{ item.campo.servizi.all|join:", " }}
                                                                     </uli>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
                                                                     <!-- Form per l'eliminazione del campo -->
-                                                                    <form action="{% url 'core:elimina_campo' campo.id %}" method="post">
+                                                                    <form action="{% url 'core:elimina_campo' item.campo.id %}" method="post">
                                                                         {% csrf_token %}
                                                                         <button type="submit" class="btn btn-danger">Elimina</button>
                                                                     </form>
@@ -177,17 +216,17 @@
                                                         </div>
                                                     </div>
                                                     <!-- Modal di immagine -->
-                                                    <div class="modal fade" id="image-modal-{{ campo.id }}" tabindex="-1" role="dialog" aria-labelledby="image-modal-label-{{ campo.id }}" aria-hidden="true">
+                                                    <div class="modal fade" id="image-modal-{{ item.campo.id }}" tabindex="-1" role="dialog" aria-labelledby="image-modal-label-{{ item.campo.id }}" aria-hidden="true">
                                                         <div class="modal-dialog modal-lg" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="image-modal-label-{{ campo.id }}">{{ campo.get_tipo_sport_display }}</h5>
+                                                                    <h5 class="modal-title" id="image-modal-label-{{ item.campo.id }}">{{ item.campo.get_tipo_sport_display }}</h5>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                 </div>
                                                                 <div class="modal-body text-center">
-                                                                    <img src="{{ campo.img.url }}" alt="Campo Image" class="img-fluid">
+                                                                    <img src="{{ item.campo.img.url }}" alt="Campo Image" class="img-fluid">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -207,5 +246,6 @@
         </div>
     {% endif %}
 </div>
+
 
 {% endblock %}

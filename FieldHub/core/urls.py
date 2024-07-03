@@ -21,5 +21,6 @@ urlpatterns = [
     path('ore_libere/<int:campo_id>/<str:data>/', ore_libere, name='ore_libere'), #Accessibile da: Utenti ok
     path("eliminaprenotazione/<int:pk>/", elimina_prenotazione, name="elimina_prenotazione"), #Accessibile da: Utenti, Strutture
     path('esporta_prenotazioni/', esporta_prenotazioni, name='esporta_prenotazioni'), 
+    path('recensioni/<int:campo_id>/', RecensioniCampoView.as_view(), name='recensioni-campo'),
 
 ]
