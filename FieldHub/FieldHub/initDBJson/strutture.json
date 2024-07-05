@@ -4,7 +4,7 @@
             "username": "Federico09",
             "nome": "Federico",
             "cognome": "Rossi",
-            "password": "P@ssw0rd123"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Centro Sportivo XYZ",
@@ -21,7 +21,7 @@
             "username": "Mario10",
             "nome": "Mario",
             "cognome": "Bianchi",
-            "password": "Secur3P@ss"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Polisportiva",
@@ -38,7 +38,7 @@
             "username": "Luca11",
             "nome": "Luca",
             "cognome": "Verdi",
-            "password": "P@ssword456"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Palestra Fitness Plus",
@@ -55,7 +55,7 @@
             "username": "Giorgio12",
             "nome": "Giorgio",
             "cognome": "Neri",
-            "password": "MyP@ssw0rd"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Fit club",
@@ -72,7 +72,7 @@
             "username": "Andrea13",
             "nome": "Andrea",
             "cognome": "Russo",
-            "password": "Passw0rd789"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Centro Wellness",
@@ -89,7 +89,7 @@
             "username": "Chiara14",
             "nome": "Chiara",
             "cognome": "Ferrari",
-            "password": "Str0ngPass"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Sport City",
@@ -106,7 +106,7 @@
             "username": "Davide15",
             "nome": "Davide",
             "cognome": "Galli",
-            "password": "Dav1dePass"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Arena Sportiva",
@@ -123,7 +123,7 @@
             "username": "Elena16",
             "nome": "Elena",
             "cognome": "Bianchi",
-            "password": "Elen4S3cur3"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Gym & More",
@@ -140,7 +140,7 @@
             "username": "Francesco17",
             "nome": "Francesco",
             "cognome": "Romano",
-            "password": "Fr4nc3sc0P@ss"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Fitness Factory",
@@ -157,7 +157,7 @@
             "username": "Giulia18",
             "nome": "Giulia",
             "cognome": "Rossi",
-            "password": "G1uliaP@ss"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Health Club",
@@ -174,7 +174,7 @@
             "username": "Laura19",
             "nome": "Laura",
             "cognome": "Esposito",
-            "password": "L4ur4Pass"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Sport & Health",
@@ -191,7 +191,7 @@
             "username": "Marco20",
             "nome": "Marco",
             "cognome": "Marini",
-            "password": "M4rc0Pass"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Fitness Zone",
@@ -208,7 +208,7 @@
             "username": "Simone21",
             "nome": "Simone",
             "cognome": "Conti",
-            "password": "Sim0neP@ss"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Active Gym",
@@ -225,7 +225,7 @@
             "username": "Valentina22",
             "nome": "Valentina",
             "cognome": "De Luca",
-            "password": "V4l3nt1naP@ss"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Wellness Hub",
@@ -242,7 +242,7 @@
             "username": "Alessandro23",
             "nome": "Alessandro",
             "cognome": "Greco",
-            "password": "Al3ssandr0P@ss"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Fitness One",
@@ -259,7 +259,7 @@
             "username": "Martina24",
             "nome": "Martina",
             "cognome": "Galli",
-            "password": "Mart1naP@ss"
+            "password": "passwordstruttura"
         },
         "struttura": {
             "nome_struttura": "Health & Fitness",

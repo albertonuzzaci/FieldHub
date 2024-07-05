@@ -4,7 +4,7 @@
         "username": "Alberto",
         "nome": "Alberto",
         "cognome": "Nuzzaci",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "alberto.nuzzaci@gmail.com",
         "telefono": "1234567890"
     },
@@ -12,7 +12,7 @@
         "username": "Chiara",
         "nome": "Chiara",
         "cognome": "Rossi",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "chiara.rossi@example.com",
         "telefono": "2345678901"
     },
@@ -20,7 +20,7 @@
         "username": "Marco",
         "nome": "Marco",
         "cognome": "Bianchi",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "marco.bianchi@example.com",
         "telefono": "3456789012"
     },
@@ -28,7 +28,7 @@
         "username": "Giulia",
         "nome": "Giulia",
         "cognome": "Verdi",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "giulia.verdi@example.com",
         "telefono": "4567890123"
     },
@@ -36,7 +36,7 @@
         "username": "Luca",
         "nome": "Luca",
         "cognome": "Russo",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "luca.russo@example.com",
         "telefono": "5678901234"
     },
@@ -44,7 +44,7 @@
         "username": "Matteo123",
         "nome": "Matteo",
         "cognome": "Bianchi",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "matteo.bianchi@example.com",
         "telefono": "6789012345"
     },
@@ -52,7 +52,7 @@
         "username": "Sara456",
         "nome": "Sara",
         "cognome": "Rossi",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "sara.rossi@example.com",
         "telefono": "7890123456"
     },
@@ -60,7 +60,7 @@
         "username": "Marco789",
         "nome": "Marco",
         "cognome": "Ferrari",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "marco.ferrari@example.com",
         "telefono": "8901234567"
     },
@@ -68,7 +68,7 @@
         "username": "Elena321",
         "nome": "Elena",
         "cognome": "Marini",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "elena.marini@example.com",
         "telefono": "9012345678"
     },
@@ -76,7 +76,7 @@
         "username": "Davide654",
         "nome": "Davide",
         "cognome": "Galli",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "davide.galli@example.com",
         "telefono": "0123456789"
     },
@@ -84,7 +84,7 @@
         "username": "Alice987",
         "nome": "Alice",
         "cognome": "Esposito",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "alice.esposito@example.com",
         "telefono": "1234567890"
     },
@@ -92,7 +92,7 @@
         "username": "Francesco543",
         "nome": "Francesco",
         "cognome": "Romano",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "francesco.romano@example.com",
         "telefono": "2345678901"
     },
@@ -100,7 +100,7 @@
         "username": "Chiara678",
         "nome": "Chiara",
         "cognome": "Conti",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "chiara.conti@example.com",
         "telefono": "3456789012"
     },
@@ -108,7 +108,7 @@
         "username": "Giorgio345",
         "nome": "Giorgio",
         "cognome": "Barbieri",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "giorgio.barbieri@example.com",
         "telefono": "4567890123"
     },
@@ -116,7 +116,7 @@
         "username": "Martina210",
         "nome": "Martina",
         "cognome": "Rinaldi",
-        "password": "P@ssw0rd1!",
+        "password": "passwordutente",
         "email": "martina.rinaldi@example.com",
         "telefono": "5678901234"
     }

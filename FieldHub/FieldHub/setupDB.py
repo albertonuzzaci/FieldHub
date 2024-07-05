@@ -32,7 +32,7 @@ def erase_db():
 
 def init_db():
     #------CREAZIONE SUPER USER------
-    admin = User.objects.create_superuser(username="alberto_admin", password="passwordadmin")
+    admin = User.objects.create_superuser(username="admin", password="passwordadmin")
     admin.save
     
     #------POPOLAZIONE TABELLA STRUTTURE------

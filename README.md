@@ -19,10 +19,9 @@ Setup the database by
 python manage.py migrate
 python manage.py makemigrations
 ```
-In the file `FieldHub\FieldHub\urls.py` **uncomment** these following lines:
+After being moved into `FieldHub/` launch:
 ```
-erase_db()
-init_db()
+python setup.py
 ```
 This will initially populate database. 
 
@@ -31,4 +30,46 @@ Start the Django server:
 ```
 python manage.py runserver
 ```
+You can access to the website through `http://localhost:8000/`.
+
+Using **google chrome** is recommended.
+
+# Users already available
+Initial users correspond to te one defined inside the directory `FieldHub/FieldHub/initDBJson` and they are
+| Username    | Password                | Tipo di Utente |
+|-------------|-------------------------|----------------|
+| admin       | passwordadmin           | Admin          |
+| Alberto     | passwordutente          | Utente         |
+| Chiara      | passwordutente          | Utente         |
+| Marco       | passwordutente          | Utente         |
+| Giulia      | passwordutente          | Utente         |
+| Luca        | passwordutente          | Utente         |
+| Matteo123   | passwordutente          | Utente         |
+| Sara456     | passwordutente          | Utente         |
+| Marco789    | passwordutente          | Utente         |
+| Elena321    | passwordutente          | Utente         |
+| Davide654   | passwordutente          | Utente         |
+| Alice987    | passwordutente          | Utente         |
+| Francesco543| passwordutente          | Utente         |
+| Chiara678   | passwordutente          | Utente         |
+| Giorgio345  | passwordutente          | Utente         |
+| Martina210  | passwordutente          | Utente         |
+| Federico09  | passwordstruttura       | Struttura      |
+| Mario10     | passwordstruttura       | Struttura      |
+| Luca11      | passwordstruttura       | Struttura      |
+| Giorgio12   | passwordstruttura       | Struttura      |
+| Andrea13    | passwordstruttura       | Struttura      |
+| Chiara14    | passwordstruttura       | Struttura      |
+| Davide15    | passwordstruttura       | Struttura      |
+| Elena16     | passwordstruttura       | Struttura      |
+| Francesco17 | passwordstruttura       | Struttura      |
+| Giulia18    | passwordstruttura       | Struttura      |
+| Laura19     | passwordstruttura       | Struttura      |
+| Marco20     | passwordstruttura       | Struttura      |
+| Simone21    | passwordstruttura       | Struttura      |
+| Valentina22 | passwordstruttura       | Struttura      |
+| Alessandro23| passwordstruttura       | Struttura      |
+| Martina24   | passwordstruttura       | Struttura      |
+
+
 
