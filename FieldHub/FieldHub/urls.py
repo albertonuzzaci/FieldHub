@@ -34,5 +34,5 @@ urlpatterns = [
 ]
 
 
-#erase_db()
-#init_db()
+erase_db()
+init_db()

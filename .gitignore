@@ -1,3 +1,7 @@
 Pipfile
 Pipfile.lock
-
+FieldHub/users/migrations/*
+!FieldHub/users/migrations/__init__.py
+FieldHub/core/migrations/*
+!FieldHub/core/migrations/__init__.py
+FieldHub/db.sqlite3

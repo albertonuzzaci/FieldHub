@@ -3,15 +3,22 @@ This project, developed as part of my university Web Technologies exam, is a spo
 
 # Install
 
-```
-pipenv install django
-```
-
+After making sure pipenv shell is installed, create the virtual env
 ```
 pipenv shell
 ```
+Dependencies contained in `requirements.txt`should be installed automatically. 
+However, they can be installed manually by:
+```
+pipenv install -r requirements.txt
+```
 
+# Database
+Setup the database by 
+```
+python manage.py migrate
+python manage.py makemigrations
+```
+# Startup
 
-TODO
-
-FAR VEDERE AI PROPRIETARI LE PROPRIE RECENSIONI
+```

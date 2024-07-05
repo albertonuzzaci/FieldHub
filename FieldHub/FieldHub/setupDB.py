@@ -31,6 +31,9 @@ def erase_db():
                 os.remove(file_path)
 
 def init_db():
+    #------CREAZIONE SUPER USER------
+    admin = User.objects.create_superuser(username="alberto_admin", password="passwordadmin")
+    admin.save
     
     #------POPOLAZIONE TABELLA STRUTTURE------
     json_strutture_path = os.path.join(os.path.dirname(__file__), 'initDBJson', 'strutture.json')
@@ -274,10 +277,9 @@ def init_db():
         f"{ProprietarioStruttura.objects.count()} - Proprietari struttura\n"
         f"{Utente.objects.count()} - Utenti\n"
         f"{Prenotazione.objects.count()} - Prenotazioni\n"
-        f"{Recensione.objects.count()} - Recensioni"
+        f"{Recensione.objects.count()} - Recensioni\n"
+        f"{User.objects.filter(is_staff=True).count()} - Admin"
     )
     print("INFO DATABASE")
     print(dbInfo)
 
-            
-        
