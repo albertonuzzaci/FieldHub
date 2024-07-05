@@ -1,9 +1,10 @@
 # FieldHub
 This project, developed as part of my university Web Technologies exam, is a sports field booking platform built using Django. It allows users to easily reserve tennis, football, and other sports fields online.
 
+
 # Install
 
-After making sure pipenv shell is installed, create the virtual env
+After making sure `pipenv` is installed, create the virtual env on the top level of the folder
 ```
 pipenv shell
 ```
@@ -14,10 +15,15 @@ pipenv install -r requirements.txt
 ```
 
 # Database
+Enter inside the project directory by
+```
+cd FieldHub/
+```
+so you should be in `~/FieldHub/FieldHub`.
 Setup the database by 
 ```
-python manage.py migrate
 python manage.py makemigrations
+python manage.py migrate
 ```
 After being moved into `FieldHub/` launch:
 ```
