@@ -5,3 +5,4 @@ FieldHub/users/migrations/*
 FieldHub/core/migrations/*
 !FieldHub/core/migrations/__init__.py
 FieldHub/db.sqlite3
+.DS_Store
