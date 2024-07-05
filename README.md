@@ -13,7 +13,16 @@ However, they can be installed manually by:
 ```
 pipenv install -r requirements.txt
 ```
-
+There may be problems with the versions present in the requirements. In that case install libraries manually by creating the virtual env: 
+```
+pipenv shell
+```
+then
+```
+pipenv install django
+pipenv install pillow
+pipenv install django-widget-tweaks
+```
 # Database
 Enter inside the project directory by
 ```
