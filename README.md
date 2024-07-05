@@ -22,8 +22,8 @@ cd FieldHub/
 so you should be in `~/FieldHub/FieldHub`.
 Setup the database by 
 ```
-python manage.py migrate
 python manage.py makemigrations
+python manage.py migrate
 ```
 After being moved into `FieldHub/` launch:
 ```
