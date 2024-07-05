@@ -19,7 +19,7 @@
         color:#fbc634 !important;
     }
     .ratings i{
-        font-size: 24px;
+        font-size: 18px;
     }
     .image-container {
         width: 100px;
@@ -70,7 +70,43 @@
         margin-bottom: 32px;
     }
 
+    .card-img-top {
+        margin-bottom: 0; /* Rimuove lo spazio sotto l'immagine */
+        border-radius: 0; /* Rimuove l'arrotondamento dei bordi se presente */
+    }
+
+    .card-img-top img {
+        width: 100%;
+        height: 250px;
+        border: none;
+        border-radius: 35px; /* Assicura che l'immagine non abbia bordi arrotondati */
+    }
+    #font-campi-trovati{
+        font-family: Georgia, serif;
+        font-size: 25px;
+        letter-spacing: 0.2px;
+        word-spacing: 4px;
+        font-weight: 700;
+        text-decoration: none;
+        font-style: normal;
+        color: #142d4c;
+    }
+    #background-svg{
+        background: rgb(255,255,255);
+        background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(148,145,149,1) 100%);
+    }
+    .my-size{
+        font-size: 17px;
+    }
+    .font-rating{
+        font-size:15px;
+    }
+    .font-price{
+        font-size:25px;
+    }
 </style>
+
+
 {% endblock%}
 {% block content %}
 
@@ -304,11 +340,29 @@
         </div>
         <hr style=" height: 4px; background-color: #000000;">
         </center>
+
+        <!--CONTAINER PER I SUGGERITI-->
+        <div class="container py-5">
+            {% if suggested_campi %}
+                <h5 id="font-campi-trovati"> Gli utenti a cui è piaciuto questo campo è piaciuto anche... </h5>
+        
+                <div class="row row-cols-1 row-cols-md-3 g-4 py-5">
+                {% for campo, voto in suggested_campi %}
+                  
+                    {% include "core/card.html" with img=campo.img voto=voto id_campo=campo.id tipo_sport=campo.get_tipo_sport_display coperto=campo.coperto costo=campo.costo servizi=campo.servizi struttura=campo.struttura %}
+                {% endfor %}
+                </div>
+            {% else %}
+                <h3 id="font-campi-trovati"> Nessun suggerimento trovato </h1>
+            {% endif %}
+        </div>
+        <hr style=" height: 4px; background-color: #000000;">
+       
         
         <!--CONTAINER PER LE RECENSIONI-->
         <div id="recensioni-id"class="m-5 md-15">
         {% if recensioni.count > 0 %}
-            <h2 class="mb-3"style="color:black; text-align:center"> Recensioni </h2>
+            <h2 class="mb-3"style="color:black; text-align:center"> Recensioni - Voto medio: {{voto_medio}} <i class="fa fa-star rating-color"></i> </h2>
         {% for recensione in recensioni%}
 
             {% include "core/recensione.html" with recensione=recensione %}

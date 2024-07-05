@@ -1,5 +1,25 @@
 [
     {
+        "Voto": 4,
+        "Testo": "Ottimo campo, ben tenuto e con buoni servizi. Tornerò sicuramente."
+    },
+    {
+        "Voto": 4,
+        "Testo": "Buona struttura, anche se potrebbe migliorare qualche dettaglio. In generale, un'esperienza positiva."
+    },
+    {
+        "Voto": 5,
+        "Testo": "Fantastico! Il campo è in perfette condizioni e il personale è molto cordiale."
+    },
+    {
+        "Voto": 5,
+        "Testo": "Un ottimo posto per giocare, mi sono trovato molto bene. Consigliato!"
+    },
+    {
+        "Voto": 5,
+        "Testo": "Esperienza superba, il campo è eccellente e l'atmosfera è davvero piacevole."
+    },
+    {
         "Voto": 5,
         "Testo": "Campo perfetto, ben curato e con ottimi servizi. Assolutamente consigliato!"
     },

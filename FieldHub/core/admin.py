@@ -19,5 +19,5 @@ class StrutturaAdmin(admin.ModelAdmin):
 
     verify_struttura.short_description = "Verifica le strutture selezionate"
 
-# Correggi qui l'ordine dei parametri
+
 admin.site.register(Struttura, StrutturaAdmin)

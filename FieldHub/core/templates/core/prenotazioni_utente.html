@@ -89,8 +89,9 @@
                                         <h2>Prenotazioni di {{ user.username }}</h2>
                                     </div>
                                     <div class="card-body">
-                                        {% if prenotazioni_vecchie %}
-                                            {% for prenotazione, has_recensione in prenotazioni_vecchie.items %}
+                                        {% if prenotazioni_passate %}
+                                            <h3 class="m-3" style="color:black; text-align:center"> Prenotazioni passate </h3>
+                                            {% for prenotazione, has_recensione in prenotazioni_passate.items %}
                                                 <div class="row">
                                                     <div class="col"><strong>Data:</strong> {{ prenotazione.data|date:"d F Y" }} </div>
                                                     <div class="col"><strong>Ora:</strong> {{ prenotazione.ora }}</div>
@@ -147,59 +148,60 @@
                                                 <hr>
                                             {% endfor %}
 
-                                            <!-- Paginazione prenotazioni vecchie -->
+                                            <!-- Paginazione prenotazioni passate -->
                                             <div class="pagination-container">
                                                 <nav aria-label="Page navigation">
                                                     <ul class="pagination justify-content-center">
-                                                        {% if prenotazioni_vecchie_page_obj.has_previous %}
+                                                        {% if prenotazioni_passate_page_obj.has_previous %}
                                                             <li class="page-item">
-                                                                <a class="page-link" href="?page_vecchie={{ prenotazioni_vecchie_page_obj.previous_page_number }}&page_future={{prenotazioni_future_page_obj.number}}">Precedente</a>
+                                                                <a class="page-link" href="?page_passate={{ prenotazioni_passate_page_obj.previous_page_number }}&page_future={{prenotazioni_future_page_obj.number}}">Precedente</a>
                                                             </li>
                                                         {% endif %}
                                                         
     
-                                                        {% if prenotazioni_vecchie_page_obj.paginator.num_pages > 2 %}
-                                                            <li class="page-item {% if prenotazioni_vecchie_page_obj.number == 1 %}active{% endif %}">
-                                                                <a class="page-link" href="?page_vecchie=1&page_future={{prenotazioni_future_page_obj.number}}">1</a>
+                                                        {% if prenotazioni_passate_page_obj.paginator.num_pages > 2 %}
+                                                            <li class="page-item {% if prenotazioni_passate_page_obj.number == 1 %}active{% endif %}">
+                                                                <a class="page-link" href="?page_passate=1&page_future={{prenotazioni_future_page_obj.number}}">1</a>
                                                             </li>
                                                         
-                                                            {% if prenotazioni_vecchie_page_obj.number > 2 %}
+                                                            {% if prenotazioni_passate_page_obj.number > 2 %}
                                                                 <li class="page-item disabled">
                                                                     <span class="page-link">...</span>
                                                                 </li>
                                                             {% endif %}
                                                         
-                                                            {% if prenotazioni_vecchie_page_obj.number > 1 and prenotazioni_vecchie_page_obj.number < prenotazioni_vecchie_page_obj.paginator.num_pages %}
+                                                            {% if prenotazioni_passate_page_obj.number > 1 and prenotazioni_passate_page_obj.number < prenotazioni_passate_page_obj.paginator.num_pages %}
                                                                 <li class="page-item active">
-                                                                    <a class="page-link" href="?page_vecchie={{ prenotazioni_vecchie_page_obj.number }}&page_future={{prenotazioni_future_page_obj.number}}">{{ prenotazioni_vecchie_page_obj.number }}</a>
+                                                                    <a class="page-link" href="?page_passate={{ prenotazioni_passate_page_obj.number }}&page_future={{prenotazioni_future_page_obj.number}}">{{ prenotazioni_passate_page_obj.number }}</a>
                                                                 </li>
                                                             {% endif %}
                                                         
-                                                            {% if prenotazioni_vecchie_page_obj.number < prenotazioni_vecchie_page_obj.paginator.num_pages|add:"-1" %}
+                                                            {% if prenotazioni_passate_page_obj.number < prenotazioni_passate_page_obj.paginator.num_pages|add:"-1" %}
                                                                 <li class="page-item disabled">
                                                                     <span class="page-link">...</span>
                                                                 </li>
                                                             {% endif %}
                                                         
-                                                            <li class="page-item {% if prenotazioni_vecchie_page_obj.number == prenotazioni_vecchie_page_obj.paginator.num_pages %}active{% endif %}">
-                                                                <a class="page-link" href="?page_vecchie={{ prenotazioni_vecchie_page_obj.paginator.num_pages }}&page_future={{prenotazioni_future_page_obj.number}}">{{ prenotazioni_vecchie_page_obj.paginator.num_pages }}</a>
+                                                            <li class="page-item {% if prenotazioni_passate_page_obj.number == prenotazioni_passate_page_obj.paginator.num_pages %}active{% endif %}">
+                                                                <a class="page-link" href="?page_passate={{ prenotazioni_passate_page_obj.paginator.num_pages }}&page_future={{prenotazioni_future_page_obj.number}}">{{ prenotazioni_passate_page_obj.paginator.num_pages }}</a>
                                                             </li>
                                                         {% endif %}
                                                         
-                                                        {% if prenotazioni_vecchie_page_obj.has_next %}
+                                                        {% if prenotazioni_passate_page_obj.has_next %}
                                                             
                                                             <li class="page-item">
-                                                                <a class="page-link" href="?page_vecchie={{ prenotazioni_vecchie_page_obj.next_page_number }}&page_future={{prenotazioni_future_page_obj.number}}">Successiva</a>
+                                                                <a class="page-link" href="?page_passate={{ prenotazioni_passate_page_obj.next_page_number }}&page_future={{prenotazioni_future_page_obj.number}}">Successiva</a>
                                                             </li>
                                                         {% endif %}
                                                     </ul>
                                                 </nav>
                                             </div>
                                         {% else %}
-                                            <h2>Nessuna prenotazione da recensire</h2>
+                                            <h2>Nessuna prenotazione passata e da recensire</h2>
                                         {% endif %}
-
+                                        <hr style="border: 3px solid black;">
                                         {% if prenotazioni_future %}
+                                            <h3 class="m-3" style="color:black; text-align:center"> Prenotazioni future </h3>
                                             {% for prenotazione in prenotazioni_future %}
                                                 <div class="row">
                                                     <div class="col"><strong>Data:</strong> {{ prenotazione.data|date:"d F Y" }} </div>
@@ -248,13 +250,13 @@
                                                     <ul class="pagination justify-content-center">
                                                         {% if prenotazioni_future_page_obj.has_previous %}
                                                             <li class="page-item">
-                                                                <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.previous_page_number }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">Precedente</a>
+                                                                <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.previous_page_number }}&page_passate={{prenotazioni_passate_page_obj.number}}">Precedente</a>
                                                             </li>
                                                         {% endif %}
                                                         
                                                         {% if prenotazioni_future_page_obj.paginator.num_pages > 2 %}
                                                         <li class="page-item {% if prenotazioni_future_page_obj.number == 1 %}active{% endif %}">
-                                                            <a class="page-link" href="?page_future=1&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">1</a>
+                                                            <a class="page-link" href="?page_future=1&page_passate={{prenotazioni_passate_page_obj.number}}">1</a>
                                                         </li>
                                                         
                                                         {% if prenotazioni_future_page_obj.number > 2 %}
@@ -265,7 +267,7 @@
                                                         
                                                         {% if prenotazioni_future_page_obj.number > 1 and prenotazioni_future_page_obj.number < prenotazioni_future_page_obj.paginator.num_pages %}
                                                             <li class="page-item active">
-                                                                <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.number }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">{{ prenotazioni_future_page_obj.number }}</a>
+                                                                <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.number }}&page_passate={{prenotazioni_passate_page_obj.number}}">{{ prenotazioni_future_page_obj.number }}</a>
                                                             </li>
                                                         {% endif %}
                                                         
@@ -276,7 +278,7 @@
                                                         {% endif %}
                                                         
                                                         <li class="page-item {% if prenotazioni_future_page_obj.number == prenotazioni_future_page_obj.paginator.num_pages %}active{% endif %}">
-                                                            <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.paginator.num_pages }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">{{ prenotazioni_future_page_obj.paginator.num_pages }}</a>
+                                                            <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.paginator.num_pages }}&page_passate={{prenotazioni_passate_page_obj.number}}">{{ prenotazioni_future_page_obj.paginator.num_pages }}</a>
                                                         </li>
                                                         {% endif %}
                                                     
@@ -284,14 +286,14 @@
                                                         
                                                         {% if prenotazioni_future_page_obj.has_next %}
                                                             <li class="page-item">
-                                                                <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.next_page_number }}&page_vecchie={{prenotazioni_vecchie_page_obj.number}}">Successiva</a>
+                                                                <a class="page-link" href="?page_future={{ prenotazioni_future_page_obj.next_page_number }}&page_passate={{prenotazioni_passate_page_obj.number}}">Successiva</a>
                                                             </li>
                                                         {% endif %}
                                                     </ul>
                                                 </nav>
                                             </div>
                                         {% else %}
-                                            <h2>Nessuna prenotazione futura</h2>
+                                            <h2 style="color:black; text-align:center">Nessuna prenotazione futura</h2>
                                         {% endif %}
                                     </div>
                                 </div>

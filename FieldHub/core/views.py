@@ -3,12 +3,11 @@ from django.db.models import Q
 from django.db.models.functions import Round
 
 from django.views.generic.list import ListView
-from django.views.generic import TemplateView
-from django.views import View
+from django.views.generic import TemplateView, DetailView
 from django.urls import reverse
 from django.db.models import Avg
 
-
+from .recommendations import get_recommendations_for_campo
 from datetime import datetime
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
@@ -76,7 +75,6 @@ class ListaCampiView(ListView):
             queryset = queryset.filter(coperto=(coperto == 'True'))
         
         queryset = queryset.annotate(voto_medio=Avg('recensioni__voto'))
-        print(ordinamento)
         try:
             if ordinamento:
                 if ordine == 'asc':
@@ -127,7 +125,6 @@ class ListaCampiView(ListView):
         context['coperto'] = self.request.GET.get('coperto', '')  
         
         return context
-
     
 class PrenotazioneConfermataView(UtenteNormale, TemplateView):
     template_name = 'core/prenotazione_confermata.html'
@@ -172,8 +169,12 @@ class PrenotazioneConfermataView(UtenteNormale, TemplateView):
         return self.render_to_response(context)
 
 class PrenotazioniUtenteView(UtenteNormale, TemplateView):
+    '''
+    Essendo che sono due liste separate visualizzate in una pagina è impossibile utilizzare una list view. Bisognerebbe utilizzarne due
+    '''
     template_name = 'core/prenotazioni_utente.html' 
     paginate_by = 5  
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
@@ -181,7 +182,7 @@ class PrenotazioniUtenteView(UtenteNormale, TemplateView):
         utente = Utente.objects.get(user=user)
        
         now = timezone.localtime(timezone.now())
-        prenotazioni_vecchie = Prenotazione.objects.filter(
+        prenotazioni_passate = Prenotazione.objects.filter(
             Q(data__lt=now.date()) |
             Q(data=now.date(), ora__lt=now.time()),
             utente__user=user
@@ -195,20 +196,20 @@ class PrenotazioniUtenteView(UtenteNormale, TemplateView):
 
         prenotazioni_dict = {}
 
-        for prenotazione in prenotazioni_vecchie:
+        for prenotazione in prenotazioni_passate:
             has_recensione = Recensione.objects.filter(utente=utente, campo=prenotazione.campo).exists()
             prenotazioni_dict[prenotazione] = has_recensione
 
-        # Paginazione delle prenotazioni vecchie
-        paginator_vecchie = Paginator(list(prenotazioni_dict.items()), self.paginate_by)
-        page_vecchie = self.request.GET.get('page_vecchie')
+        # Paginazione delle prenotazioni passate
+        paginator_passate = Paginator(list(prenotazioni_dict.items()), self.paginate_by)
+        page_passate = self.request.GET.get('page_passate')
         
         try:
-            prenotazioni_vecchie_paginati = paginator_vecchie.page(page_vecchie)
+            prenotazioni_passate_paginati = paginator_passate.page(page_passate)
         except PageNotAnInteger:
-            prenotazioni_vecchie_paginati = paginator_vecchie.page(1)
+            prenotazioni_passate_paginati = paginator_passate.page(1)
         except EmptyPage:
-            prenotazioni_vecchie_paginati = paginator_vecchie.page(paginator_vecchie.num_pages)
+            prenotazioni_passate_paginati = paginator_passate.page(paginator_passate.num_pages)
         
         # Paginazione delle prenotazioni future
         paginator_future = Paginator(prenotazioni_future, self.paginate_by)
@@ -221,14 +222,17 @@ class PrenotazioniUtenteView(UtenteNormale, TemplateView):
         except EmptyPage:
             prenotazioni_future_paginati = paginator_future.page(paginator_future.num_pages)
         
-        context['prenotazioni_vecchie'] = dict(prenotazioni_vecchie_paginati)
-        context['prenotazioni_vecchie_page_obj'] = prenotazioni_vecchie_paginati
+        context['prenotazioni_passate'] = dict(prenotazioni_passate_paginati)
+        context['prenotazioni_passate_page_obj'] = prenotazioni_passate_paginati
         context['prenotazioni_future'] = prenotazioni_future_paginati
         context['prenotazioni_future_page_obj'] = prenotazioni_future_paginati
         
         return context
-    
+
 class PrenotazioniStrutturaView(UtenteStruttura, TemplateView):
+    '''
+    Non è possibile usare list view perchè non è progettato per gestire un dizionario o una lista di tuple direttamente come query set
+    '''
     template_name = 'core/prenotazioni_struttura.html'
     paginate_by = 7
 
@@ -262,18 +266,34 @@ class PrenotazioniStrutturaView(UtenteStruttura, TemplateView):
         return context
 
 class DetailCampoView(UtenteNormale, ListView):
+    '''
+    Si tratta di una list view poichè deve scorrere le recensioni oltre che far vedere le informazioni del campo
+    '''
     model = Recensione
     template_name = "core/visualizza_campo.html"
     context_object_name = 'recensioni'
-    paginate_by = 3
+    paginate_by = 4
 
     def get_queryset(self):
         self.campo = get_object_or_404(Campo, pk=self.kwargs['pk'])
-        return Recensione.objects.filter(campo=self.campo)
+        return Recensione.objects.filter(campo=self.campo).order_by("-voto")
 
+    
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['object'] = self.campo
+        suggested_campi = get_recommendations_for_campo(self.campo, considerJustSameType=True)
+        suggested_campi_dict = {}
+        for campo in suggested_campi:
+            voto_medio = round(Recensione.objects.filter(campo_id=campo.id).aggregate(Avg('voto'))['voto__avg'],1)
+            
+            if voto_medio is None:
+                voto_medio = "-"
+    
+            suggested_campi_dict[campo] = voto_medio
+        
+        context['suggested_campi'] =  list(suggested_campi_dict.items())
         voto_medio = self.get_queryset().aggregate(media=Avg('voto'))['media']
         if voto_medio is None:
             voto_medio = "-"
@@ -282,7 +302,7 @@ class DetailCampoView(UtenteNormale, ListView):
         context['voto_medio'] = voto_medio
         return context
 
-class DetailStrutturaView(UtenteNormale, View):
+class DetailStrutturaView(UtenteNormale, DetailView):
     template_name = "core/visualizza_struttura.html"
     
     def get(self, request, pk):
@@ -290,7 +310,7 @@ class DetailStrutturaView(UtenteNormale, View):
         
         return render(request, self.template_name, {'object': struttura})
    
-class CercaCampoListView(ListView):
+class CercaCampo(ListView):
     model = Campo
     template_name = 'core/cerca_campo.html'
     context_object_name = 'campi'
@@ -310,7 +330,7 @@ class CercaCampoListView(ListView):
         context['tipi_sport'] = Campo.TIPO_SPORT_CHOICES
         return context
 
-class ListaCampiPerStrutturaView(ListView):
+class ListaCampiPerStrutturaView(UtenteStruttura, ListView):
     model = Campo
     template_name = 'core/lista_campi_per_struttura.html'
     context_object_name = 'object_list'
@@ -330,6 +350,8 @@ class ListaCampiPerStrutturaView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['struttura'] = self.struttura
+        context['title'] = "Gestisci campi" 
+
         context['object_list'] = [
             {
                 'campo': campo,
@@ -338,11 +360,11 @@ class ListaCampiPerStrutturaView(ListView):
         ]
         return context
 
-class RecensioniCampoView(ListView):
+class RecensioniCampoView(UtenteStruttura, ListView):
     model = Recensione
-    template_name = 'core/recensioni_campo.html'  # Specifica il tuo template
+    template_name = 'core/recensioni_campo.html'  
     context_object_name = 'recensioni'
-    paginate_by = 5
+    paginate_by = 4
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated or not request.user.is_propStruttura:
@@ -363,6 +385,10 @@ class RecensioniCampoView(ListView):
     def get_queryset(self):
         return Recensione.objects.filter(campo=self.campo).order_by('-data_recensione')
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['campo'] = self.campo
+        return context
 
 #---------------FBV--------------------
 def create_campo(request):
@@ -517,3 +543,6 @@ def esporta_prenotazioni(request):
         #attachment serve per scaricare altrimenti si vede solo nel browser
 
         return response
+
+
+

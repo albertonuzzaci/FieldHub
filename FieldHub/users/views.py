@@ -16,6 +16,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 def register(request):
+    if request.user.is_authenticated:
+        raise PermissionDenied
     return render(request, 'users/register.html')
 
 def propStrutturaUpdateView(request):
@@ -162,15 +164,15 @@ def login_request(request):
                 if next_url:
                     return redirect(next_url)
 
-                    #return redirect('/?login=ok')
             else:
                 messages.error(request, "Username o password sbagliati.")
         else:
             messages.error(request, "Username o password sbagliati.")
     
     return render(request, 'users/login.html', context={'form': AuthenticationForm(), 'next': next_url})
+
 @login_required
-def logout_view(request):
+def logout_request(request):
     logout(request)
     return redirect('/?logout=ok')
 
@@ -194,8 +196,6 @@ def view_profile(request):
         }
 
     return render(request, 'users/profile_detail.html', profile_data)
-
-
 
 @login_required
 def update_profile(request):
@@ -222,44 +222,3 @@ def cambia_password(request):
         form = CambiaPasswordForm(request.user)
 
     return render(request, 'users/cambia_password.html', {'form': form})
-'''
-from django.http import JsonResponse
-from django.core.files.storage import default_storage
-
-@csrf_exempt  # Necessario solo se stai gestendo la vista con AJAX senza il CSRF token
-def upload_image(request):
-    if request.method == 'POST' and request.is_ajax():
-        image_file = request.FILES.get('img')
-        if image_file:
-            try:
-                # Salva il file nella cartella MEDIA_ROOT
-                saved_path = default_storage.save('img/users_img/profile_pic/' + image_file.name, image_file)
-                # Costruisci l'URL completo dell'immagine
-                image_url = settings.MEDIA_URL + saved_path
-                return JsonResponse({'url': image_url})
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-        else:
-            return JsonResponse({'error': 'Nessun file ricevuto'}, status=400)
-    else:
-        return JsonResponse({'error': 'Richiesta non valida'}, status=400)
-
-
-def save_image(img, save_path):
-    # Genera un nome unico per l'immagine
-    img_name = get_random_string(10) + '.jpg'
-    path = os.path.join(settings.MEDIA_ROOT, save_path)
-
-    # Assicurati che la directory di salvataggio esista, altrimenti creala
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-    # Salva l'immagine nel percorso specificato
-    file_path = os.path.join(path, img_name)
-    with open(file_path, 'wb+') as destination:
-        for chunk in img.chunks():
-            destination.write(chunk)
-
-    # Ritorna il percorso relativo dell'immagine salvata
-    return os.path.join(save_path, img_name)
-'''

@@ -19,15 +19,15 @@ class PrenotazioneModelTest(TestCase):      # 3 test
         #---CREAZIONE DUE USER---
         self.user_utente = User.objects.create(
             username='testutente',
-            nome='Federico',
-            cognome='Utente',
+            first_name='Federico',
+            last_name='Utente',
             password='testpass',
             is_utente=True
         )
         self.user_propStruttura = User.objects.create(
             username='testpropStruttura',
-            nome='Massimo',
-            cognome='Proprietario',
+            first_name='Massimo',
+            last_name='Proprietario',
             password='testpass',
             is_propStruttura=True
         )
@@ -131,15 +131,15 @@ class RecensioneModelTest(TestCase):        # 3 test
         #---CREAZIONE DUE USER---
         self.user_utente = User.objects.create(
             username='testutente',
-            nome='Federico',
-            cognome='Utente',
+            first_name='Federico',
+            last_name='Utente',
             password='testpass',
             is_utente=True
         )
         self.user_propStruttura = User.objects.create(
             username='testpropStruttura',
-            nome='Massimo',
-            cognome='Proprietario',
+            first_name='Massimo',
+            last_name='Proprietario',
             password='testpass',
             is_propStruttura=True
         )
@@ -244,10 +244,13 @@ class RecensioneModelTest(TestCase):        # 3 test
             )
     
     def test_recensione_for_other_user(self):
+        '''
+        Un utente può recensire solo per lui stesso
+        '''
         self.user_utente2 = User.objects.create(
             username='testutente2',
-            nome='Federico',
-            cognome='Utente',
+            first_name='Federico',
+            last_name='Utente',
             password='testpass',
             is_utente=True
         )
@@ -274,8 +277,8 @@ class EliminaPrenotazioneViewTest(TestCase):# 1 test
     def setUp(self):
         # CREAZIONE DUE UTENTI
         self.user_utente = User.objects.create(username='testutente',
-                                                    nome='nome',
-                                                    cognome='cognome',
+                                                    first_name='first_name',
+                                                    last_name='last_name',
                                                     password='testpass', 
                                                     is_utente=True
                                                     )
@@ -287,8 +290,8 @@ class EliminaPrenotazioneViewTest(TestCase):# 1 test
 
         self.user_propStruttura = User.objects.create(username='testproprietario', 
                                                         password='testpass', 
-                                                        nome='nome',
-                                                        cognome='cognome',
+                                                        first_name='first_name',
+                                                        last_name='last_name',
                                                         is_propStruttura=True
                                                         )
         self.struttura = Struttura.objects.create(
@@ -329,8 +332,8 @@ class EliminaPrenotazioneViewTest(TestCase):# 1 test
         self.user_utente2 = User.objects.create_user(
             username='testutente2',
             password='testpass',
-            first_name='nome',
-            last_name='cognome',
+            first_name='first_name',
+            last_name='last_name',
             is_utente=True
         )
         
@@ -384,27 +387,30 @@ class PrenotazioniUtenteViewTest(TestCase): # 3 test
 
     def test_last_old_prenotazione_before_today(self):
         '''
-        Verifico che l'ultima recensione dell'ultima pagina delle prenotazioni vecchie sia minore di quella attuale
+        Verifico che l'ultima recensione dell'ultima pagina delle prenotazioni passate sia minore di quella attuale
         '''
         self.client.login(username='testuser', password='testpass')
-        response = self.client.get(reverse('core:prenotazioni_utente') + '?page_vecchie=1')
+        response = self.client.get(reverse('core:prenotazioni_utente') + '?page_passate=1')
         
-        prenotazioni_vecchie_page = response.context.get('prenotazioni_vecchie_page_obj')
+        prenotazioni_passate_page = response.context.get('prenotazioni_passate_page_obj')
         
-        self.assertIsNotNone(prenotazioni_vecchie_page)
+        self.assertIsNotNone(prenotazioni_passate_page)
         
-        last_old_booking = list(prenotazioni_vecchie_page)[-1][0]
+        last_old_booking = list(prenotazioni_passate_page)[-1][0]
         
         self.assertTrue(last_old_booking.data < timezone.now().date())
     
     def test_no_prenotazione_nuovo_utente(self):
+        '''
+        Controllo che un nuovo utente non abbia nessuna prenotazione
+        '''
         new_user = User.objects.create_user(username='newuser', password='newpass', is_utente=True)
         Utente.objects.create(user=new_user, email='newuser@test.com', numTelefono='987654321')
 
         self.client.login(username='newuser', password='newpass')
         response = self.client.get(reverse('core:prenotazioni_utente'))
 
-        self.assertContains(response, 'Nessuna prenotazione da recensire')
+        self.assertContains(response, 'Nessuna prenotazione passata')
         self.assertContains(response, 'Nessuna prenotazione futura')
     
     def test_review_button_disabled_for_reviewed_booking(self):
@@ -441,8 +447,8 @@ class OreLibereTest(TestCase):               # 2 test
         self.user_utente = User.objects.create_user(
             username='testutente',
             password='testpass',
-            first_name='nome',
-            last_name='cognome',
+            first_name='first_name',
+            last_name='last_name',
             is_utente=True
         )
 

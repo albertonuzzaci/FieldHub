@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ object.nome_struttura }}{% endblock %}
+{% block title %}Recensioni {{campo.get_tipo_sport_display }}{% endblock %}
 {% block head %}
 
 {% endblock%}
@@ -56,6 +56,13 @@
         }
 
     </style>
+    <div class="row" style="display:flex; flex-wrap:wrap">
+        <div class="container text-center my-5">
+            <div style="width: 700px; height: auto; overflow: hidden; margin: auto; border: 5px solid gray; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+                <img src="{{ campo.img.url }}" alt="Campo Image" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+        </div>
+    </div>
     {% if recensioni.count > 0 %}
         <h2 class="mb-3"style="color:black; text-align:center"> Recensioni </h2>
         {% for recensione in recensioni %}

@@ -30,7 +30,7 @@ class CreaCampoForm(forms.ModelForm):
         struttura = list(ProprietarioStruttura.objects.filter(user=self.user))[0].struttura
         
         if self.cleaned_data['coperto'] is None:
-            coperto = False  # Imposta False se il valore è None
+            coperto = False 
         else:
             coperto = self.cleaned_data['coperto']
         campo = Campo.objects.create(tipo_sport=self.cleaned_data['tipo_sport'],

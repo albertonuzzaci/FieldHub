@@ -39,5 +39,85 @@
         "password": "P@ssw0rd1!",
         "email": "luca.russo@example.com",
         "telefono": "5678901234"
+    },
+    {
+        "username": "Matteo123",
+        "nome": "Matteo",
+        "cognome": "Bianchi",
+        "password": "P@ssw0rd1!",
+        "email": "matteo.bianchi@example.com",
+        "telefono": "6789012345"
+    },
+    {
+        "username": "Sara456",
+        "nome": "Sara",
+        "cognome": "Rossi",
+        "password": "P@ssw0rd1!",
+        "email": "sara.rossi@example.com",
+        "telefono": "7890123456"
+    },
+    {
+        "username": "Marco789",
+        "nome": "Marco",
+        "cognome": "Ferrari",
+        "password": "P@ssw0rd1!",
+        "email": "marco.ferrari@example.com",
+        "telefono": "8901234567"
+    },
+    {
+        "username": "Elena321",
+        "nome": "Elena",
+        "cognome": "Marini",
+        "password": "P@ssw0rd1!",
+        "email": "elena.marini@example.com",
+        "telefono": "9012345678"
+    },
+    {
+        "username": "Davide654",
+        "nome": "Davide",
+        "cognome": "Galli",
+        "password": "P@ssw0rd1!",
+        "email": "davide.galli@example.com",
+        "telefono": "0123456789"
+    },
+    {
+        "username": "Alice987",
+        "nome": "Alice",
+        "cognome": "Esposito",
+        "password": "P@ssw0rd1!",
+        "email": "alice.esposito@example.com",
+        "telefono": "1234567890"
+    },
+    {
+        "username": "Francesco543",
+        "nome": "Francesco",
+        "cognome": "Romano",
+        "password": "P@ssw0rd1!",
+        "email": "francesco.romano@example.com",
+        "telefono": "2345678901"
+    },
+    {
+        "username": "Chiara678",
+        "nome": "Chiara",
+        "cognome": "Conti",
+        "password": "P@ssw0rd1!",
+        "email": "chiara.conti@example.com",
+        "telefono": "3456789012"
+    },
+    {
+        "username": "Giorgio345",
+        "nome": "Giorgio",
+        "cognome": "Barbieri",
+        "password": "P@ssw0rd1!",
+        "email": "giorgio.barbieri@example.com",
+        "telefono": "4567890123"
+    },
+    {
+        "username": "Martina210",
+        "nome": "Martina",
+        "cognome": "Rinaldi",
+        "password": "P@ssw0rd1!",
+        "email": "martina.rinaldi@example.com",
+        "telefono": "5678901234"
     }
 ]

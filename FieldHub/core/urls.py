@@ -8,8 +8,8 @@ urlpatterns = [
     path('prenotazioni/utente/', PrenotazioniUtenteView.as_view(), name='prenotazioni_utente'), #Accessibile da: Utenti OK
     path('prenotazioni/struttura/', PrenotazioniStrutturaView.as_view(), name='prenotazioni_struttura'), #Accessibile da: Strutture OK
     path("campo/<int:pk>/", DetailCampoView.as_view(), name="visualizza_campo"), #Accessibile da: Utenti OK
-    path("struttura/<int:struttura_id>/", DetailStrutturaView.as_view(), name="visualizza_struttura"),
-    path('cercacampo/', CercaCampoListView.as_view(), name="cerca_campo"), #Accessibile da: Utenti, Anonymous  OK
+    path("struttura/<int:pk>/", DetailStrutturaView.as_view(), name="visualizza_struttura"),
+    path('cercacampo/', CercaCampo.as_view(), name="cerca_campo"), #Accessibile da: Utenti, Anonymous  OK
     path('prenotazioneconfermata/', PrenotazioneConfermataView.as_view(), name='prenotazione_confermata'), #Accessibile da: Utenti  OK
     path('gestiscicampi/', ListaCampiPerStrutturaView.as_view(), name="gestisci_campi"), #Accessibile da: Strutture  OK
 

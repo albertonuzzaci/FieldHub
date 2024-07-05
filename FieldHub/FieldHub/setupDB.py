@@ -86,6 +86,7 @@ def init_db():
     
     dict_img = {}
 
+    print(Campo.TIPO_SPORT_CHOICES)
     for tipo_sport, _ in Campo.TIPO_SPORT_CHOICES:
         dict_img[tipo_sport] = {
             'coperto':[],
@@ -185,7 +186,7 @@ def init_db():
     data_massima = oggi + timedelta(days=giorni_successivi)
     
     for campo in campi:
-        for _ in range(PRENOTAZIONI_FUTURE):  # 10 prenotazioni future per ogni campo
+        for _ in range(PRENOTAZIONI_FUTURE): 
             utente = random.choice(utenti)
             data = oggi + timedelta(days=random.randint(1, giorni_successivi))
             ora = random.choice(ore)
@@ -205,7 +206,7 @@ def init_db():
                     data = oggi + timedelta(days=random.randint(1, giorni_successivi))
                     ora = random.choice(ore)
 
-        for _ in range(PRENOTAZIONI_PASSATE):  # 10 prenotazioni vecchie per ogni campo
+        for _ in range(PRENOTAZIONI_PASSATE):  
             utente = random.choice(utenti)
             data = oggi - timedelta(days=random.randint(1, giorni_precedenti))
             ora = random.choice(ore)

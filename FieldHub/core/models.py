@@ -45,7 +45,8 @@ class Campo(models.Model):
         ('calcio7', 'Calcio a 7'),
         ('padel', 'Padel'),
         ('beachvolley', 'Beach Volley'),
-        ('pallavolo', 'Pallavolo')
+        ('pallavolo', 'Pallavolo'),
+        ('beachsoccer','Beachsoccer')
     ]
     
     img = models.ImageField(upload_to='static/img/users_img/field_pic', default='img/default_img/no_image.jpg')
@@ -93,8 +94,7 @@ class Prenotazione(models.Model):
             raise ValueError("L'ora deve essere tra le 10 e le 21 comprese.")
         super().save(*args, **kwargs)
     
-    
-        
+          
 class Recensione(models.Model):
     data_recensione = models.DateField()
     utente = models.ForeignKey('users.Utente', on_delete=models.CASCADE, related_name='recensioni')
