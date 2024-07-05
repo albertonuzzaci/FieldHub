@@ -19,6 +19,16 @@ Setup the database by
 python manage.py migrate
 python manage.py makemigrations
 ```
-# Startup
-
+In the file `FieldHub\FieldHub\urls.py` **uncomment** these following lines:
 ```
+erase_db()
+init_db()
+```
+This will initially populate database. 
+
+# Startup
+Start the Django server:
+```
+python manage.py runserver
+```
+
