@@ -1,9 +1,13 @@
 # FieldHub
 This project, developed as part of my university Web Technologies exam, is a sports field booking platform built using Django. It allows users to easily reserve tennis, football, and other sports fields online.
 
-# Install
 
-After making sure pipenv shell is installed, create the virtual env
+# Install
+After cloning the folder, enter
+```
+cd FieldHub/
+```
+After making sure `pipenv` is installed, create the virtual env
 ```
 pipenv shell
 ```
