@@ -12,24 +12,35 @@ PRENOTAZIONI_FUTURE = 8
 
 def erase_db():
     print("Cancello il DB")
+    
     Campo.objects.all().delete()
     Servizio.objects.all().delete()
     Struttura.objects.all().delete()
     User.objects.all().delete()
     Prenotazione.objects.all().delete()
     Recensione.objects.all().delete()
+
     image_folder_paths = [
-    'img/users_img/profile_pic',
-    'img/users_img/field_pic'
+        'img/users_img/profile_pic',
+        'img/users_img/field_pic'
     ]
+
     static_abs_path = os.path.abspath(STATICFILES_DIRS[0])
+
     for folder in image_folder_paths:
         absolute_path = os.path.join(static_abs_path, folder)
-        for f in os.listdir(absolute_path):
-            file_path = os.path.join(absolute_path, f)
-            if os.path.isfile(file_path):
-                os.remove(file_path)
-
+        
+        if not os.path.exists(absolute_path):
+            os.makedirs(absolute_path)
+        
+        if os.path.exists(absolute_path):
+            for f in os.listdir(absolute_path):
+                file_path = os.path.join(absolute_path, f)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                    
+    
+    print("Database cancellato e cartelle immagini svuotate.")
 def init_db():
     #------CREAZIONE SUPER USER------
     admin = User.objects.create_superuser(username="admin", password="passwordadmin")
