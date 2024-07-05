@@ -3,11 +3,8 @@ This project, developed as part of my university Web Technologies exam, is a spo
 
 
 # Install
-After cloning the folder, enter
-```
-cd FieldHub/
-```
-After making sure `pipenv` is installed, create the virtual env
+
+After making sure `pipenv` is installed, create the virtual env on the top level of the folder
 ```
 pipenv shell
 ```
@@ -18,6 +15,10 @@ pipenv install -r requirements.txt
 ```
 
 # Database
+Enter inside the project directory by
+```
+cd FieldHub/
+```
 Setup the database by 
 ```
 python manage.py migrate
