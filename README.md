@@ -13,6 +13,7 @@ However, they can be installed manually by:
 ```
 pipenv install -r requirements.txt
 ```
+# Problems due to the version of the libraries needed
 There may be problems with the versions present in the requirements. In that case install libraries manually by creating the virtual env: 
 ```
 pipenv shell
