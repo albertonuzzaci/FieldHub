@@ -19,6 +19,7 @@ Enter inside the project directory by
 ```
 cd FieldHub/
 ```
+so you should be in `~/FieldHub/FieldHub`.
 Setup the database by 
 ```
 python manage.py migrate
