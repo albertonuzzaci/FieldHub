@@ -103,10 +103,17 @@ class ListaCampiView(ListView):
             else:
                 voto_medio = round(voto_medio, 1)
             campi_dict[campo] = voto_medio
-
+        
+        # Si crea un oggetto Paginator, passandogli l'elenco dei dati e il numero di elementi per pagina.
         paginator = Paginator(list(campi_dict.items()), self.paginate_by)
+        
+        # Si ottiene il numero della pagina corrente dai parametri della richiesta 
         page = self.request.GET.get('page')
         
+        # Si tenta di ottenere la pagina corrente dal Paginator. 
+        # Se il numero di pagina non è un intero (PageNotAnInteger), si mostra la prima pagina. 
+        # Se il numero di pagina è fuori dal range valido (EmptyPage), si mostra l'ultima pagina disponibile.
+         
         try:
             campi_paginati = paginator.page(page)
         except PageNotAnInteger:
@@ -114,8 +121,11 @@ class ListaCampiView(ListView):
         except EmptyPage:
             campi_paginati = paginator.page(paginator.num_pages)
         
+        # Si aggiorna il contesto con la lista degli oggetti paginati (campi_paginati),
+        # un dizionario dei campi e i dettagli della pagina corrente (page_obj).
+        
         context['object_list'] = campi_paginati
-        context['campi_dict'] = dict(campi_paginati)
+        # context['campi_dict'] = dict(campi_paginati)
         context['page_obj'] = campi_paginati
 
         context['tipo_sport'] = self.request.GET.get('tipo_sport', '')
