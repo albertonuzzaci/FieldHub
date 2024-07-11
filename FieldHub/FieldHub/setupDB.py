@@ -9,6 +9,7 @@ from FieldHub.settings import STATICFILES_DIRS
 
 PRENOTAZIONI_PASSATE = 8
 PRENOTAZIONI_FUTURE = 8
+STRUTTURE_VERIFICATE = 5
 
 def erase_db():
     print("Cancello il DB")
@@ -91,7 +92,12 @@ def init_db():
 
             proprietario_struttura.save()
     
-        
+    
+    #-----VERIFICA N STRUTTURE CASUALI------
+    strutture_ids = Struttura.objects.values_list('id', flat=True)
+    random_ids = random.sample(list(strutture_ids), STRUTTURE_VERIFICATE)
+    Struttura.objects.filter(id__in=random_ids).update(verified=True)
+    
     #------POPOLAZIONE TABELLA CAMPI------
     json_campi_path = os.path.join(os.path.dirname(__file__), 'initDBJson', 'campi.json')
     
